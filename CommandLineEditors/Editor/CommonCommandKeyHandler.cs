@@ -27,7 +27,7 @@ namespace CommandLineEditors.Editor
 
         public ConsoleKeyHandlerResult MoveCursorLeftToStartOfWord(ConsoleKeyInfo keyInfo, TContext context)
         {
-            int newPosition = GetStartOfWord(keyInfo, context);
+            int newPosition = GetStartOfWord(context);
             context.ConsoleEditorLine.CurrentCursorPosition = newPosition;
             return ConsoleKeyHandlerResult.Consumed;
         }
@@ -45,13 +45,19 @@ namespace CommandLineEditors.Editor
             return ConsoleKeyHandlerResult.Consumed;
         }
 
+        public ConsoleKeyHandlerResult RefreshDisplay(ConsoleKeyInfo keyInfo, TContext context)
+        {
+            context.ConsoleEditorLine.RefreshDisplay();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         public ConsoleKeyHandlerResult MoveCursorRight(ConsoleKeyInfo keyInfo, TContext context)
         {
             context.ConsoleEditorLine.MoveCursorRight();
             return ConsoleKeyHandlerResult.Consumed;
         }
 
-        public int GetStartOfWord(ConsoleKeyInfo keyInfo, TContext context)
+        public int GetStartOfWord(TContext context)
         {
             string currentText = context.ConsoleEditorLine.Text;
             int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
@@ -74,12 +80,12 @@ namespace CommandLineEditors.Editor
         public string RemoveWordBeforeCursor(ConsoleKeyInfo keyInfo, TContext context)
         {
             int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            int startPosition = GetStartOfWord(keyInfo, context);
+            int startPosition = GetStartOfWord(context);
             string wordBeforeCursor = context.ConsoleEditorLine.Remove(startPosition, currentPosition - startPosition);
             return wordBeforeCursor;
         }
 
-        public string RemoveTextBeforeCursor(TContext context)
+        public string RemoveTextBeforeCursor(ConsoleKeyInfo keyInfo, TContext context)
         {
             int currentCursorPosition = context.ConsoleEditorLine.CurrentCursorPosition;
             string removedText = context.ConsoleEditorLine.Remove(0, currentCursorPosition);

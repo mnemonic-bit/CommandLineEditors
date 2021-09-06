@@ -18,14 +18,11 @@ namespace CommandLineEditors.Editor
 
         private readonly TContext _context;
 
-        private readonly IConsoleEditorLine _consoleEditorLine;
-
         public ConsoleKeyHandlerMap<TContext> KeyHandlerMap { get; set; }
 
-        public LineEditor(TContext context)
+        public LineEditor(TContext context, string text = "", string prefix = "")
         {
             _context = context;
-            _consoleEditorLine = new ConsoleEditorLine();
         }
 
         public string ReadLine()
@@ -80,7 +77,7 @@ namespace CommandLineEditors.Editor
 
         public void Close()
         {
-            _consoleEditorLine.Close();
+            _context.ConsoleEditorLine.Close();
         }
 
     }

@@ -1,6 +1,6 @@
 ﻿using CommandLineEditors.Console;
 
-namespace CommandLineEditors.Editor
+namespace CommandLineEditors.Editor.ReadLine
 {
     internal class ReadLineEditorContext : IEditorContext
     {
