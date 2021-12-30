@@ -1,9 +1,9 @@
 ﻿using CommandLineEditors.Console;
 using System;
 
-namespace CommandLineEditors.Editor
+namespace CommandLineEditors.Editor.Vi
 {
-    internal class ViLineEditor : IConsoleEditor
+    public class ViLineEditor : IConsoleEditor
     {
 
         /// <summary>
@@ -62,7 +62,6 @@ namespace CommandLineEditors.Editor
         public ViLineEditor(string text)
         {
             _context = new ViLineEditorContext();
-            InitContext(_context, text);
 
             _commandModeKeyHandlers = InitCommandModeKeyHandlers();
             _editModeKeyHandlers = InitEditModeKeyHandlers();
@@ -97,13 +96,24 @@ namespace CommandLineEditors.Editor
             keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, _commonHandlers.MoveCursorLeft);
             keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, _commonHandlers.MoveCursorRight);
             keyHandlerMap.AddKeyHandler(ConsoleKey.Home, _commonHandlers.MoveCursorToStartOfLine);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('^', ConsoleKey.D6, true, false, false), _commonHandlers.MoveCursorToStartOfLine);
             keyHandlerMap.AddKeyHandler(ConsoleKey.End, _commonHandlers.MoveCursorToEndOfLine);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0024', ConsoleKey.D4, true, false, false), _commonHandlers.MoveCursorToEndOfLine);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo(':', ConsoleKey.Oem1, true, false, false), StartCommandMode);
+
+            // Control key bindings
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000e', ConsoleKey.N, false, false, true), _commonHandlers.MoveCursorLeft);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000c', ConsoleKey.L, false, false, true), _commonHandlers.RefreshDisplay);
 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('a', ConsoleKey.A, false, false, false), StartAppendMode);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0044', ConsoleKey.D, true, false, false), RemoveLineAfterCursor);
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('i', ConsoleKey.I, false, false, false), StartEditMode);
 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('h', ConsoleKey.H, false, false, false), _commonHandlers.MoveCursorLeft);
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('l', ConsoleKey.L, false, false, false), _commonHandlers.MoveCursorRight);
+
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0078', ConsoleKey.X, false, false, false), _commonHandlers.RemoveAfterCursor);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0058', ConsoleKey.X, true, false, false), _commonHandlers.RemoveBeforeCursor);
 
             //keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('l', ConsoleKey.L, false, false, false), _commonHandlers.MoveCursorRight);
 
@@ -121,6 +131,11 @@ namespace CommandLineEditors.Editor
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.Backspace, false, false, false), _commonHandlers.RemoveBeforeCursor);
             keyHandlerMap.AddKeyHandler(ConsoleKey.Home, _commonHandlers.MoveCursorToStartOfLine);
             keyHandlerMap.AddKeyHandler(ConsoleKey.End, _commonHandlers.MoveCursorToEndOfLine);
+
+            // Control key bindings
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.H, false, false, true), _commonHandlers.MoveCursorLeft);
+            //keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0015', ConsoleKey.U, false, false, true), ProcessCtrlU); // move to beginning of "insert"
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0017', ConsoleKey.W, false, false, true), _commonHandlers.MoveCursorLeftToStartOfWord);
 
             keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, _commonHandlers.MoveCursorLeft);
             keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, _commonHandlers.MoveCursorRight);
@@ -161,6 +176,32 @@ namespace CommandLineEditors.Editor
         private ConsoleKeyHandlerResult StartEditMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
         {
             _lineEditor.KeyHandlerMap = _editModeKeyHandlers;
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult StartCommandMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
+        {
+            context.ConsoleEditorLine.Close();
+
+            ViLineCommandEditor commandEditor = new ViLineCommandEditor(":");
+            string command = commandEditor.ReadLine();
+            commandEditor.Close();
+
+            //act upon the command
+            //TODO...
+
+            context.ConsoleEditorLine.RefreshDisplay();
+
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult RemoveLineAfterCursor(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
+        {
+            string removedText = _commonHandlers.RemoveTextAfterCursor(context);
+            if (!string.IsNullOrEmpty(removedText))
+            {
+                Clipboard.SetText(removedText);
+            }
             return ConsoleKeyHandlerResult.Consumed;
         }
 

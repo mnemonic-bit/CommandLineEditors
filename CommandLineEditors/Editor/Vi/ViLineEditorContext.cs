@@ -1,7 +1,7 @@
 ﻿using CommandLineEditors.Console;
 using System;
 
-namespace CommandLineEditors.Editor
+namespace CommandLineEditors.Editor.Vi
 {
     internal class ViLineEditorContext : IEditorContext
     {

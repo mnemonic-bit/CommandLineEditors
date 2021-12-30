@@ -2,7 +2,7 @@
 using CommandLineEditors.Data;
 using System;
 
-namespace CommandLineEditors.Editor
+namespace CommandLineEditors.Editor.ReadLine
 {
     /// <summary>
     /// Manages the history of console-editor lines of the ReadLineEditor.
