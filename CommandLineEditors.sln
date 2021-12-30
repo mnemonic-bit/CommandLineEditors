@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineEditors", "Comma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineEditors.Demo", "CommandLineEditors.Demo\CommandLineEditors.Demo.csproj", "{9966A7C4-DC39-4FCA-885F-6E5EC409D8CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleKeyReader", "ConsoleKeyReader\ConsoleKeyReader.csproj", "{DAFFFDD6-4588-4B22-8885-0110AD40CD16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{9966A7C4-DC39-4FCA-885F-6E5EC409D8CF}.Release|x64.Build.0 = Release|Any CPU
 		{9966A7C4-DC39-4FCA-885F-6E5EC409D8CF}.Release|x86.ActiveCfg = Release|Any CPU
 		{9966A7C4-DC39-4FCA-885F-6E5EC409D8CF}.Release|x86.Build.0 = Release|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Debug|x64.Build.0 = Debug|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Debug|x86.Build.0 = Debug|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x64.ActiveCfg = Release|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x64.Build.0 = Release|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x86.ActiveCfg = Release|Any CPU
+		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -3,7 +3,7 @@ using CommandLineEditors.Data;
 using CommandLineEditors.Extensions;
 using System;
 
-namespace CommandLineEditors.Editor
+namespace CommandLineEditors.Editor.ReadLine
 {
     /// <summary>
     /// A ConsoleEditor maintains a line of editing on a console screen.
@@ -63,19 +63,10 @@ namespace CommandLineEditors.Editor
         /// <summary>
         /// Inits the console editor instance.
         /// </summary>
-        public ReadLineEditor()
-            : this("")
-        {
-        }
-
-        /// <summary>
-        /// Inits the console editor instance.
-        /// </summary>
-        public ReadLineEditor(string text)
+        public ReadLineEditor(string text = "", string prompt = "")
         {
             _context = new ReadLineEditorContext();
-            InitContext(_context, text);
-            _lineEditor = new LineEditor<ReadLineEditorContext>(_context);
+            _lineEditor = new LineEditor<ReadLineEditorContext>(_context, text, prompt);
             _lineEditor.KeyHandlerMap = InitKeyHandlers();
         }
 
@@ -304,7 +295,7 @@ namespace CommandLineEditors.Editor
                 return ConsoleKeyHandlerResult.Consumed;
             }
 
-            _commonHandlers.RemoveTextBeforeCursor(context);
+            _ = _commonHandlers.RemoveTextBeforeCursor(keyInfo, context);
             return ConsoleKeyHandlerResult.Consumed;
         }
 

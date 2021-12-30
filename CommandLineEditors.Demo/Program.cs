@@ -1,6 +1,5 @@
-﻿using CommandLineEditors;
-using CommandLineEditors.Editor;
-using System.Collections.Generic;
+﻿using CommandLineEditors.Editor.ReadLine;
+using CommandLineEditors.Editor.Vi;
 
 namespace CommandLineEditors.Demo
 {
@@ -16,7 +15,8 @@ namespace CommandLineEditors.Demo
             System.Console.WriteLine("Enter a line, then press enter and the entered text will be presented to you. Keep on entering lines, until fed up. If you wish to stop, just press enter on an empty line.");
 
             // the read line instance we will use
-            ReadLineEditor readLineInterface = new ReadLineEditor();
+            ReadLineEditor readLineInterface = new ReadLineEditor("", "> ");
+            //ViLineEditor readLineInterface = new ViLineEditor("> ");
 
             // set the auto completion items
             //List<string> autoCompletionElements = new List<string>() { "test", "singleton" };
@@ -25,7 +25,7 @@ namespace CommandLineEditors.Demo
             string result = "-not-empty-to-start-with-";
             while (!string.IsNullOrEmpty(result))
             {
-                System.Console.Write("> ");
+                //System.Console.Write("> ");
                 // testing ConsoleInput
                 result = readLineInterface.ReadLine();
                 // output the result
