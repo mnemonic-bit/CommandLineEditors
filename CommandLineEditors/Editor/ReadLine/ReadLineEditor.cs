@@ -13,6 +13,8 @@ namespace CommandLineEditors.Editor.ReadLine
     public class ReadLineEditor : IConsoleEditor
     {
 
+        private readonly string _prompt;
+
         private readonly History<string> _history = new History<string>();
 
         private readonly CommonCommandKeyHandler<ReadLineEditorContext> _commonHandlers = new CommonCommandKeyHandler<ReadLineEditorContext>();
@@ -65,6 +67,7 @@ namespace CommandLineEditors.Editor.ReadLine
         /// </summary>
         public ReadLineEditor(string text = "", string prompt = "")
         {
+            _prompt = prompt;
             _context = new ReadLineEditorContext();
             _lineEditor = new LineEditor<ReadLineEditorContext>(_context, text, prompt);
             _lineEditor.KeyHandlerMap = InitKeyHandlers();
@@ -101,7 +104,7 @@ namespace CommandLineEditors.Editor.ReadLine
 
         private UndoableConsoleEditorLine CreateEditorLine(string text)
         {
-            return new UndoableConsoleEditorLine(new ConsoleEditorLine(text));
+            return new UndoableConsoleEditorLine(new ConsoleEditorLine(text, _prompt));
         }
 
         private ConsoleKeyHandlerMap<ReadLineEditorContext> InitKeyHandlers()

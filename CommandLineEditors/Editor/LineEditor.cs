@@ -1,5 +1,4 @@
-﻿using CommandLineEditors.Console;
-using System;
+﻿using System;
 
 using SystemConsole = System.Console;
 
@@ -17,12 +16,14 @@ namespace CommandLineEditors.Editor
     {
 
         private readonly TContext _context;
+        private readonly string _prefix;
 
         public ConsoleKeyHandlerMap<TContext> KeyHandlerMap { get; set; }
 
         public LineEditor(TContext context, string text = "", string prefix = "")
         {
             _context = context;
+            _prefix = prefix;
         }
 
         public string ReadLine()
