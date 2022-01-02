@@ -465,12 +465,12 @@ namespace CommandLineEditors.Editor.ReadLine
 
         private ConsoleKeyHandlerResult MoveOneUpInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
+            context.ConsoleEditorLine.Close();
             if (context.History.TryMoveUp(out UndoableConsoleEditorLine editorLine))
             {
-                context.ConsoleEditorLine.Close();
                 context.ConsoleEditorLine = editorLine;
-                context.ConsoleEditorLine.RefreshDisplay();
             }
+            context.ConsoleEditorLine.RefreshDisplay();
             return ConsoleKeyHandlerResult.Consumed;
         }
 
