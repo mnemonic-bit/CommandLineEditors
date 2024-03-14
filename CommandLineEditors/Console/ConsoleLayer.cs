@@ -77,6 +77,14 @@ namespace CommandLineEditors.Console
         }
 
         /// <summary>
+        /// Moves the cursor to the next line.
+        /// </summary>
+        public static void NewLine()
+        {
+            SystemConsole.WriteLine();
+        }
+
+        /// <summary>
         /// Clears an area of given length starting from the current position.
         /// After the area is overwritten with space characters, the cursor
         /// will be set to that position it was before the method call.
