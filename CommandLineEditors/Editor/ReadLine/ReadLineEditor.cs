@@ -149,9 +149,11 @@ namespace CommandLineEditors.Editor.ReadLine
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('d', ConsoleKey.D, false, true, false), RemoveWordAfterCursor);//
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('f', ConsoleKey.F, false, true, false), _commonHandlers.MoveCursorRightToEndOfWord);//
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('l', ConsoleKey.L, false, true, false), _commonHandlers.ChangeCharactersToLowerCaseUpToEndOfWord);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('r', ConsoleKey.R, false, true, false), RestoreOriginalContents);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0072', ConsoleKey.R, false, true, false), ProcessAltR); // ALT-r
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('u', ConsoleKey.U, false, true, false), _commonHandlers.ChangeCharactersToUpperCaseUpToEndOfWord);//
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('.', ConsoleKey.OemPeriod, false, true, false), InsertLastWordOfPreviousHistoryEntry);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u003c', ConsoleKey.OemComma, true, true, false), MoveToFirstHistoryEntry); // ALT-<
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u003e', ConsoleKey.OemPeriod, true, true, false), MoveToLastHistoryEntry); // ALT->
 
             return keyHandlerMap;
         }
@@ -178,9 +180,81 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Finished;
         }
 
+        private ConsoleKeyHandlerResult ClearScreen(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            ConsoleLayer.Clear();
+            //TODO: bug in the refresh logic: the console screen is
+            // cleared by the previous command, but the coordinates
+            // of the current line will not change. This leads to
+            // positioning the currently edited text at the same screen
+            // coordinates as it was before clearing the screen.
+            context.ConsoleEditorLine.RefreshDisplay();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult InsertLastWordOfPreviousHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            // inserts the last word of the previous history entry
+            // to the current position of the cursor.
+            // TODO: implement this
+
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveOneDownInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            context.ConsoleEditorLine.Close();
+            if (context.History.TryMoveDown(out UndoableConsoleEditorLine editorLine))
+            {
+                context.ConsoleEditorLine = editorLine;
+            }
+            context.ConsoleEditorLine.RefreshDisplay();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveOneUpInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            context.ConsoleEditorLine.Close();
+            if (context.History.TryMoveUp(out UndoableConsoleEditorLine editorLine))
+            {
+                context.ConsoleEditorLine = editorLine;
+            }
+            context.ConsoleEditorLine.RefreshDisplay();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveToFirstHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            context.ConsoleEditorLine.Close();
+            if (context.History.TryMoveFirst(out UndoableConsoleEditorLine editorLine))
+            {
+                context.ConsoleEditorLine = editorLine;
+            }
+            context.ConsoleEditorLine.RefreshDisplay();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveToLastHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            if (context.History.TryMoveLast(out UndoableConsoleEditorLine editorLine))
+            {
+                context.ConsoleEditorLine.Close();
+                context.ConsoleEditorLine = editorLine;
+                context.ConsoleEditorLine.RefreshDisplay();
+            }
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         private ConsoleKeyHandlerResult NoOperation(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             return ConsoleKeyHandlerResult.NotConsumed;
+        }
+
+        private ConsoleKeyHandlerResult ProcessAltR(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            UndoableConsoleEditorLine undoableLine = context?.ConsoleEditorLine as UndoableConsoleEditorLine;
+            undoableLine?.UndoAll();
+            return ConsoleKeyHandlerResult.Consumed;
         }
 
         private ConsoleKeyHandlerResult ProcessCtrlA(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
@@ -345,6 +419,12 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
+        private ConsoleKeyHandlerResult ProcessCtrlZ(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            // suspend the current task. This is useful in a Bash, not implemented here.
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         private ConsoleKeyHandlerResult ToggleCharacterPositions(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             if (context.ConsoleEditorLine.CurrentCursorPosition == context.ConsoleEditorLine.Length)
@@ -403,27 +483,9 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
-        private ConsoleKeyHandlerResult RestoreOriginalContents(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            context.ConsoleEditorLine.Text = context.History.CurrentEntry?.Text ?? "";
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
         private ConsoleKeyHandlerResult ProcessTabExtension(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             // TODO: implement tab-extension here
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult ClearScreen(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            ConsoleLayer.Clear();
-            //TODO: bug in the refresh logic: the console screen is
-            // cleared by the previous command, but the coordinates
-            // of the current line will not change. This leads to
-            // positioning the currently edited text at the same screen
-            // coordinates as it was before clearing the screen.
-            context.ConsoleEditorLine.RefreshDisplay();
             return ConsoleKeyHandlerResult.Consumed;
         }
 
@@ -437,12 +499,6 @@ namespace CommandLineEditors.Editor.ReadLine
 
             context.ConsoleEditorLine.Text = searchResult ?? context.ConsoleEditorLine.Text;
 
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult ProcessCtrlZ(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            // suspend the current task. This is useful in a Bash, not implemented here.
             return ConsoleKeyHandlerResult.Consumed;
         }
 
@@ -464,37 +520,6 @@ namespace CommandLineEditors.Editor.ReadLine
             int endPosition = currentText.IndexOf(ch => ch.IsWhiteSpace(), startPosition, true);
             endPosition = endPosition == -1 ? currentText.Length : endPosition;
             return endPosition;
-        }
-
-        private ConsoleKeyHandlerResult MoveOneUpInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            context.ConsoleEditorLine.Close();
-            if (context.History.TryMoveUp(out UndoableConsoleEditorLine editorLine))
-            {
-                context.ConsoleEditorLine = editorLine;
-            }
-            context.ConsoleEditorLine.RefreshDisplay();
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult MoveOneDownInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            if (context.History.TryMoveDown(out UndoableConsoleEditorLine editorLine))
-            {
-                context.ConsoleEditorLine.Close();
-                context.ConsoleEditorLine = editorLine;
-                context.ConsoleEditorLine.RefreshDisplay();
-            }
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult InsertLastWordOfPreviousHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            // inserts the last word of the previous history entry
-            // to the current position of the cursor.
-            // TODO: implement this
-
-            return ConsoleKeyHandlerResult.Consumed;
         }
 
     }

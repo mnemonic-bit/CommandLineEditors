@@ -1,19 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net6.0;net8.0</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
-    <Version>0.2.6</Version>
+    <Version>0.3.0</Version>
 
-    <RepositoryUrl>https://github.com/mnemonic-bit/CommandLineEditors</RepositoryUrl>
-    <Authors>mruether</Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Title>CommandLineEditors</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
+    <RepositoryUrl>https://github.com/mnemonic-bit/CommandLineEditors</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <Authors>Marco Ruether</Authors>
+    <Copyright>Marco Ruether</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
     <PackageId>CommandLineEditors</PackageId>
-    <Description>This library provides editors for the command line that can be used as a replacement for the standard System.Console.ReadLine() method call.</Description>
+    <Description>This library provides text editors for the command line that can be used as a replacement for the standard System.Console.ReadLine() method call.</Description>
     <PackageTags>command line editor, ReadLine</PackageTags>
-	  <IsPackable>true</IsPackable>
+    <IsPackable>true</IsPackable>
+
+    <AssemblyName>CommandLineEditors</AssemblyName>
+    <RootNamespace>CommandLineEditors</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

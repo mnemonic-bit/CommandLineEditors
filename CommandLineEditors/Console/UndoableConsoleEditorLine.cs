@@ -140,6 +140,20 @@ namespace CommandLineEditors.Console
             _consoleEditorLine.CurrentCursorPosition = lineState.CursorPosition;
         }
 
+        public void UndoAll()
+        {
+            if (_lineStates.Count == 0)
+            {
+                return;
+            }
+
+            LineState lineState = _lineStates[0];
+            _lineStates.Clear();
+
+            _consoleEditorLine.Text = lineState.LineContents;
+            _consoleEditorLine.CurrentCursorPosition = lineState.CursorPosition;
+        }
+
 
         private readonly IConsoleEditorLine _consoleEditorLine;
         private readonly List<LineState> _lineStates = new List<LineState>();

@@ -53,6 +53,36 @@ namespace CommandLineEditors.Editor.ReadLine
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryMoveFirst(out TEditorConsoleLine historyEntry)
+        {
+            historyEntry = default;
+
+            if (_positionInHistory != 0)
+            {
+                _positionInHistory = 0;
+                historyEntry = CurrentEntry;
+                return true;
+            }
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryMoveLast(out TEditorConsoleLine historyEntry)
+        {
+            historyEntry = default;
+
+            if (_positionInHistory != 0)
+            {
+                _positionInHistory = _editorHistory.Length - 1;
+                historyEntry = CurrentEntry;
+                return true;
+            }
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryMoveUp(out TEditorConsoleLine historyEntry)
         {
             historyEntry = default;
