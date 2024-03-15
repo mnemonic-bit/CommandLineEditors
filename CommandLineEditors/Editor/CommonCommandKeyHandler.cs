@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CommandLineEditors.Editor
 {
-    internal class CommonCommandKeyHandler<TContext>
+    internal sealed class CommonCommandKeyHandler<TContext>
         where TContext : IEditorContext
     {
 

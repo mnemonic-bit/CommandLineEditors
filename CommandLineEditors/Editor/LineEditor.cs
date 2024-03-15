@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommandLineEditors.Console;
+using System;
 
 using SystemConsole = System.Console;
 
@@ -11,19 +12,22 @@ namespace CommandLineEditors.Editor
     /// handler is invoked.
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    internal class LineEditor<TContext> : IConsoleEditor
+    internal sealed class LineEditor<TContext> : IConsoleEditor
         where TContext : IEditorContext
     {
 
-        private readonly TContext _context;
-        private readonly string _prefix;
-
         public ConsoleKeyHandlerMap<TContext> KeyHandlerMap { get; set; }
 
-        public LineEditor(TContext context, string text = "", string prefix = "")
+        public LineEditor(TContext context, string text = "", string prefix = "", ConsoleKeyHandlerMap<TContext> keyHandlerMap = null)
         {
             _context = context;
             _prefix = prefix;
+            KeyHandlerMap = keyHandlerMap;
+        }
+
+        public void Close()
+        {
+            _context.ConsoleEditorLine.Close();
         }
 
         public string ReadLine()
@@ -32,7 +36,7 @@ namespace CommandLineEditors.Editor
             bool stopReading = false;
             while (!stopReading)
             {
-                ConsoleKeyInfo keyInfo = SystemConsole.ReadKey(true);
+                ConsoleKeyInfo keyInfo = ConsoleLayer.ReadKey();
 
                 result = ConsoleKeyHandlerResult.NotConsumed;
                 if (KeyHandlerMap.TryGetKeyHandler(keyInfo, out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult> handler))
@@ -76,10 +80,10 @@ namespace CommandLineEditors.Editor
             }
         }
 
-        public void Close()
-        {
-            _context.ConsoleEditorLine.Close();
-        }
+
+        private readonly TContext _context;
+        private readonly string _prefix;
+
 
     }
 }

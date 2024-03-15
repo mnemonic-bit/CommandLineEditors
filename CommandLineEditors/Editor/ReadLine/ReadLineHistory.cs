@@ -1,6 +1,7 @@
 ﻿using CommandLineEditors.Console;
 using CommandLineEditors.Data;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace CommandLineEditors.Editor.ReadLine
 {
@@ -8,17 +9,25 @@ namespace CommandLineEditors.Editor.ReadLine
     /// Manages the history of console-editor lines of the ReadLineEditor.
     /// </summary>
     /// <typeparam name="TEditorConsoleLine"></typeparam>
-    internal class ReadLineHistory<TEditorConsoleLine>
+    internal sealed class ReadLineHistory<TEditorConsoleLine>
         where TEditorConsoleLine : IConsoleEditorLine
     {
 
-        private readonly History<string> _history;
+        public TEditorConsoleLine CurrentEntry
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                if (_editorHistory[_positionInHistory] == null)
+                {
+                    TEditorConsoleLine editor = _createEditorFn(_history[_positionInHistory] ?? "");
+                    editor.MoveCursorToEndOfLine();
+                    _editorHistory[_positionInHistory] = editor;
+                }
 
-        private readonly TEditorConsoleLine[] _editorHistory;
-
-        private int _positionInHistory;
-
-        private readonly Func<string, TEditorConsoleLine> _createEditorFn;
+                return _editorHistory[_positionInHistory];
+            }
+        }
 
         public ReadLineHistory(History<string> history, Func<string, TEditorConsoleLine> createEditorFn)
         {
@@ -28,23 +37,10 @@ namespace CommandLineEditors.Editor.ReadLine
             _createEditorFn = createEditorFn;
         }
 
-        public bool TryMoveUp(out TEditorConsoleLine historyEntry)
-        {
-            historyEntry = default(TEditorConsoleLine);
-
-            if (_positionInHistory > 0)
-            {
-                _positionInHistory--;
-                historyEntry = CurrentEntry;
-                return true;
-            }
-
-            return false;
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryMoveDown(out TEditorConsoleLine historyEntry)
         {
-            historyEntry = default(TEditorConsoleLine);
+            historyEntry = default;
 
             if (_positionInHistory >= 0 && _positionInHistory < _editorHistory.Length - 1)
             {
@@ -56,18 +52,27 @@ namespace CommandLineEditors.Editor.ReadLine
             return false;
         }
 
-        public TEditorConsoleLine CurrentEntry
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryMoveUp(out TEditorConsoleLine historyEntry)
         {
-            get
-            {
-                if (_editorHistory[_positionInHistory] == null)
-                {
-                    _editorHistory[_positionInHistory] = _createEditorFn(_history[_positionInHistory] ?? "");
-                }
+            historyEntry = default;
 
-                return _editorHistory[_positionInHistory];
+            if (_positionInHistory > 0)
+            {
+                _positionInHistory--;
+                historyEntry = CurrentEntry;
+                return true;
             }
+
+            return false;
         }
+
+
+        private readonly History<string> _history;
+        private readonly TEditorConsoleLine[] _editorHistory;
+        private int _positionInHistory;
+        private readonly Func<string, TEditorConsoleLine> _createEditorFn;
+
 
     }
 }

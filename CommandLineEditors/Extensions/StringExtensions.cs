@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace CommandLineEditors.Extensions
 {
     internal static class StringExtensions
     {
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int IndexOf(this string str, Func<char, bool> predicate, int startIndex = 0, bool forwardDirection = true)
         {
             if (startIndex < 0 || startIndex >= str.Length)

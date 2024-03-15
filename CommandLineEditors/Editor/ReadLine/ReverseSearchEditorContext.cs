@@ -3,7 +3,7 @@ using CommandLineEditors.Data;
 
 namespace CommandLineEditors.Editor.ReadLine
 {
-    internal class ReverseSearchEditorContext : IEditorContext
+    internal sealed class ReverseSearchEditorContext : IEditorContext
     {
 
         public IConsoleEditorLine ConsoleEditorLine { get; set; }

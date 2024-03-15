@@ -10,14 +10,8 @@ namespace CommandLineEditors.Editor.ReadLine
     /// It accepts a series of editing commands and is repsonsible for
     /// the accuracy of the display ofter each command is executed.
     /// </summary>
-    public class ReadLineEditor : IConsoleEditor
+    public sealed class ReadLineEditor : IConsoleEditor
     {
-
-        private readonly string _prompt;
-
-        private readonly History<string> _history = new History<string>();
-
-        private readonly CommonCommandKeyHandler<ReadLineEditorContext> _commonHandlers = new CommonCommandKeyHandler<ReadLineEditorContext>();
 
         /// <summary>
         /// Gets or sets the flag that enables or blocks this class
@@ -51,6 +45,37 @@ namespace CommandLineEditors.Editor.ReadLine
         }
 
         /// <summary>
+        /// Inits the console editor instance.
+        /// </summary>
+        public ReadLineEditor(string text = "", string prompt = "")
+        {
+            _prompt = prompt;
+            _context = new ReadLineEditorContext();
+            _lineEditor = new LineEditor<ReadLineEditorContext>(_context, text, prompt, InitKeyHandlers());
+        }
+
+        public void Close()
+        {
+            _context.ConsoleEditorLine.Close();
+        }
+
+        public void RefreshDisplay()
+        {
+            _context.ConsoleEditorLine.RefreshDisplay();
+        }
+
+        public string ReadLine()
+        {
+            InitContext(_context, "");
+            return _lineEditor.ReadLine();
+        }
+
+
+        private readonly string _prompt;
+        private readonly History<string> _history = new History<string>();
+        private readonly CommonCommandKeyHandler<ReadLineEditorContext> _commonHandlers = new CommonCommandKeyHandler<ReadLineEditorContext>();
+
+        /// <summary>
         /// The context stores all information needed to process all
         /// key-input made by the user.
         /// </summary>
@@ -62,31 +87,10 @@ namespace CommandLineEditors.Editor.ReadLine
         /// </summary>
         private readonly LineEditor<ReadLineEditorContext> _lineEditor;
 
-        /// <summary>
-        /// Inits the console editor instance.
-        /// </summary>
-        public ReadLineEditor(string text = "", string prompt = "")
-        {
-            _prompt = prompt;
-            _context = new ReadLineEditorContext();
-            _lineEditor = new LineEditor<ReadLineEditorContext>(_context, text, prompt);
-            _lineEditor.KeyHandlerMap = InitKeyHandlers();
-        }
 
-        public string ReadLine()
+        private UndoableConsoleEditorLine CreateEditorLine(string text)
         {
-            InitContext(_context, "");
-            return _lineEditor.ReadLine();
-        }
-
-        public void Close()
-        {
-            _context.ConsoleEditorLine.Close();
-        }
-
-        public void RefreshDisplay()
-        {
-            _context.ConsoleEditorLine.RefreshDisplay();
+            return new UndoableConsoleEditorLine(new ConsoleEditorLine(text, _prompt));
         }
 
         private void InitContext(ReadLineEditorContext context, string text)
@@ -100,11 +104,6 @@ namespace CommandLineEditors.Editor.ReadLine
             context.CtrlVPressed = false;
             context.CtrlXPressed = false;
             context.InsertMode = true;
-        }
-
-        private UndoableConsoleEditorLine CreateEditorLine(string text)
-        {
-            return new UndoableConsoleEditorLine(new ConsoleEditorLine(text, _prompt));
         }
 
         private ConsoleKeyHandlerMap<ReadLineEditorContext> InitKeyHandlers()
@@ -418,9 +417,13 @@ namespace CommandLineEditors.Editor.ReadLine
 
         private ConsoleKeyHandlerResult ClearScreen(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
-            // TODO: implement this
-            // clears the screen
-
+            ConsoleLayer.Clear();
+            //TODO: bug in the refresh logic: the console screen is
+            // cleared by the previous command, but the coordinates
+            // of the current line will not change. This leads to
+            // positioning the currently edited text at the same screen
+            // coordinates as it was before clearing the screen.
+            context.ConsoleEditorLine.RefreshDisplay();
             return ConsoleKeyHandlerResult.Consumed;
         }
 

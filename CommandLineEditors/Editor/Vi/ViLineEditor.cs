@@ -3,26 +3,8 @@ using System;
 
 namespace CommandLineEditors.Editor.Vi
 {
-    public class ViLineEditor : IConsoleEditor
+    public sealed class ViLineEditor : IConsoleEditor
     {
-
-        /// <summary>
-        /// The context stores all information needed to process all
-        /// key-input made by the user.
-        /// </summary>
-        private readonly ViLineEditorContext _context;
-
-        private readonly CommonCommandKeyHandler<ViLineEditorContext> _commonHandlers = new CommonCommandKeyHandler<ViLineEditorContext>();
-
-        private readonly ConsoleKeyHandlerMap<ViLineEditorContext> _commandModeKeyHandlers;
-
-        private readonly ConsoleKeyHandlerMap<ViLineEditorContext> _editModeKeyHandlers;
-
-        /// <summary>
-        /// The line-editor is the cosole editor instance used to make
-        /// our edits visible to the user.
-        /// </summary>
-        private readonly LineEditor<ViLineEditorContext> _lineEditor;
 
         /// <summary>
         /// Gets or sets the current test this editor-line has to edit.
@@ -66,10 +48,12 @@ namespace CommandLineEditors.Editor.Vi
             _commandModeKeyHandlers = InitCommandModeKeyHandlers();
             _editModeKeyHandlers = InitEditModeKeyHandlers();
 
-            _lineEditor = new LineEditor<ViLineEditorContext>(_context)
-            {
-                KeyHandlerMap = _commandModeKeyHandlers
-            };
+            _lineEditor = new LineEditor<ViLineEditorContext>(_context, keyHandlerMap: _commandModeKeyHandlers);
+        }
+
+        public void Close()
+        {
+            _lineEditor.Close();
         }
 
         public string ReadLine()
@@ -78,9 +62,43 @@ namespace CommandLineEditors.Editor.Vi
             return _lineEditor.ReadLine();
         }
 
-        public void Close()
+
+        /// <summary>
+        /// The context stores all information needed to process all
+        /// key-input made by the user.
+        /// </summary>
+        private readonly ViLineEditorContext _context;
+        private readonly CommonCommandKeyHandler<ViLineEditorContext> _commonHandlers = new CommonCommandKeyHandler<ViLineEditorContext>();
+        private readonly ConsoleKeyHandlerMap<ViLineEditorContext> _commandModeKeyHandlers;
+        private readonly ConsoleKeyHandlerMap<ViLineEditorContext> _editModeKeyHandlers;
+
+        /// <summary>
+        /// The line-editor is the cosole editor instance used to make
+        /// our edits visible to the user.
+        /// </summary>
+        private readonly LineEditor<ViLineEditorContext> _lineEditor;
+
+
+        private ConsoleKeyHandlerResult DefaultEditModeKeyHandler(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
         {
-            _lineEditor.Close();
+            if ((keyInfo.Modifiers & (ConsoleModifiers.Alt | ConsoleModifiers.Control)) > 0)
+            {
+                return ConsoleKeyHandlerResult.NotConsumed;
+            }
+
+            context.ConsoleEditorLine.Insert(keyInfo.KeyChar);
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult ExitEditMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
+        {
+            _lineEditor.KeyHandlerMap = _commandModeKeyHandlers;
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult FinishInput(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
+        {
+            return ConsoleKeyHandlerResult.Finished;
         }
 
         private void InitContext(ViLineEditorContext context, string text)
@@ -145,38 +163,10 @@ namespace CommandLineEditors.Editor.Vi
             return keyHandlerMap;
         }
 
-        private ConsoleKeyHandlerResult FinishInput(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
-        {
-            return ConsoleKeyHandlerResult.Finished;
-        }
-
-        private ConsoleKeyHandlerResult DefaultEditModeKeyHandler(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
-        {
-            if ((keyInfo.Modifiers & (ConsoleModifiers.Alt | ConsoleModifiers.Control)) > 0)
-            {
-                return ConsoleKeyHandlerResult.NotConsumed;
-            }
-
-            context.ConsoleEditorLine.Insert(keyInfo.KeyChar);
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult ExitEditMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
-        {
-            _lineEditor.KeyHandlerMap = _commandModeKeyHandlers;
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
         private ConsoleKeyHandlerResult StartAppendMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
         {
             _commonHandlers.MoveCursorRight(keyInfo, context);
             return StartEditMode(keyInfo, context);
-        }
-
-        private ConsoleKeyHandlerResult StartEditMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
-        {
-            _lineEditor.KeyHandlerMap = _editModeKeyHandlers;
-            return ConsoleKeyHandlerResult.Consumed;
         }
 
         private ConsoleKeyHandlerResult StartCommandMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
@@ -192,6 +182,12 @@ namespace CommandLineEditors.Editor.Vi
 
             context.ConsoleEditorLine.RefreshDisplay();
 
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult StartEditMode(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
+        {
+            _lineEditor.KeyHandlerMap = _editModeKeyHandlers;
             return ConsoleKeyHandlerResult.Consumed;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 
 namespace ConsoleKeyReader
 {
@@ -10,6 +11,7 @@ namespace ConsoleKeyReader
         {
             Console.WriteLine("Press any key to see how the ConsoleKeyInfo looks like");
 
+            Console.TreatControlCAsInput = true;
             //Console.CancelKeyPress += (sender, e) =>
             //{
             //    e.Cancel = true;
@@ -18,8 +20,8 @@ namespace ConsoleKeyReader
             bool stopReading = false;
             while (!stopReading)
             {
-                var keyAvailable = Console.KeyAvailable;
-                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                //ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                ConsoleKeyInfo keyInfo = ReadKey(true);
 
                 Console.WriteLine($"new ConsoleKeyInfo('\\u{ ToHexString(keyInfo.KeyChar) }', ConsoleKey.{ keyInfo.Key }, { ToString(keyInfo.Modifiers) })");
 
@@ -40,6 +42,23 @@ namespace ConsoleKeyReader
         private static readonly ConsoleKeyInfo UpperCaseYKey = new ConsoleKeyInfo('\u0059', ConsoleKey.Y, true, false, false);
         private static readonly ConsoleKeyInfo LowerCaseYKey = new ConsoleKeyInfo('\u0079', ConsoleKey.Y, false, false, false);
 
+
+        /// <summary>
+        /// Blocks until a character is available, then reads and returns
+        /// it to the caller. This method blocks the current thread, until
+        /// some key is available.
+        /// </summary>
+        /// <param name="intercept"></param>
+        /// <returns></returns>
+        private static ConsoleKeyInfo ReadKey(bool intercept)
+        {
+            //while (!Console.KeyAvailable)
+            //{
+            //    Thread.Sleep(5);
+            //}
+
+            return Console.ReadKey(intercept);
+        }
 
         private static string ToString(ConsoleModifiers modifiers)
         {

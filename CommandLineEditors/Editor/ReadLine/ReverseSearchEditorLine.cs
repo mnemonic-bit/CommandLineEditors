@@ -4,16 +4,8 @@ using System;
 
 namespace CommandLineEditors.Editor.ReadLine
 {
-    internal class ReverseSearchEditorLine : IConsoleEditor
+    internal sealed class ReverseSearchEditorLine : IConsoleEditor
     {
-
-        private readonly History<string> _history;
-
-        private readonly string _prompt;
-
-        private readonly ReverseSearchEditorContext _context;
-
-        private readonly LineEditor<ReverseSearchEditorContext> _lineEditor;
 
         public ReverseSearchEditorLine(string prompt, History<string> history)
         {
@@ -21,13 +13,7 @@ namespace CommandLineEditors.Editor.ReadLine
             _history = history;
             _context = new ReverseSearchEditorContext();
             InitContext(_context, _prompt, _history);
-            _lineEditor = new LineEditor<ReverseSearchEditorContext>(_context);
-            _lineEditor.KeyHandlerMap = InitKeyHandlers();
-        }
-
-        public string ReadLine()
-        {
-            return _lineEditor.ReadLine();
+            _lineEditor = new LineEditor<ReverseSearchEditorContext>(_context, keyHandlerMap: InitKeyHandlers());
         }
 
         public void Close()
@@ -35,29 +21,25 @@ namespace CommandLineEditors.Editor.ReadLine
             _context.ConsoleEditorLine.Close();
         }
 
-        private void InitContext(ReverseSearchEditorContext context, string prompt, History<string> history)
+        public string ReadLine()
         {
-            context.ConsoleEditorLine = new ConsoleEditorLine("", prompt);
-            context.Aborted = false;
-            context.History = history;
-            context.Hit = null;
+            return _lineEditor.ReadLine();
         }
 
-        private ConsoleKeyHandlerMap<ReverseSearchEditorContext> InitKeyHandlers()
+
+        private readonly History<string> _history;
+        private readonly string _prompt;
+        private readonly ReverseSearchEditorContext _context;
+        private readonly LineEditor<ReverseSearchEditorContext> _lineEditor;
+
+
+        private ConsoleKeyHandlerResult AbortSearch(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
         {
-            ConsoleKeyHandlerMap<ReverseSearchEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ReverseSearchEditorContext>();
+            // abort reverse-search, and restore the original line
+            context.Hit = null;
+            context.Aborted = true;
 
-            keyHandlerMap.DefaultKeyHandler = HandleSearchInput;
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), ReturnFromSearch);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\a', ConsoleKey.G, false, false, true), AbortSearch);
-            keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, MoveCursorLeft);
-            keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, MoveCursorRight);
-            keyHandlerMap.AddKeyHandler(ConsoleKey.Delete, RemoveAfterCursor);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.Backspace, false, false, false), RemoveBeforeCursor);
-            keyHandlerMap.AddKeyHandler(ConsoleKey.Home, MoveCursorToStartOfLine);
-            keyHandlerMap.AddKeyHandler(ConsoleKey.End, MoveCursorToEndOfLine);
-
-            return keyHandlerMap;
+            return ConsoleKeyHandlerResult.Aborted;
         }
 
         private ConsoleKeyHandlerResult HandleSearchInput(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
@@ -88,13 +70,29 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
-        private ConsoleKeyHandlerResult AbortSearch(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
+        private void InitContext(ReverseSearchEditorContext context, string prompt, History<string> history)
         {
-            // abort reverse-search, and restore the original line
+            context.ConsoleEditorLine = new ConsoleEditorLine("", prompt);
+            context.Aborted = false;
+            context.History = history;
             context.Hit = null;
-            context.Aborted = true;
+        }
 
-            return ConsoleKeyHandlerResult.Aborted;
+        private ConsoleKeyHandlerMap<ReverseSearchEditorContext> InitKeyHandlers()
+        {
+            ConsoleKeyHandlerMap<ReverseSearchEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ReverseSearchEditorContext>();
+
+            keyHandlerMap.DefaultKeyHandler = HandleSearchInput;
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), ReturnFromSearch);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\a', ConsoleKey.G, false, false, true), AbortSearch);
+            keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, MoveCursorLeft);
+            keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, MoveCursorRight);
+            keyHandlerMap.AddKeyHandler(ConsoleKey.Delete, RemoveAfterCursor);
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.Backspace, false, false, false), RemoveBeforeCursor);
+            keyHandlerMap.AddKeyHandler(ConsoleKey.Home, MoveCursorToStartOfLine);
+            keyHandlerMap.AddKeyHandler(ConsoleKey.End, MoveCursorToEndOfLine);
+
+            return keyHandlerMap;
         }
 
         private ConsoleKeyHandlerResult ReturnFromSearch(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
@@ -117,6 +115,18 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
+        private ConsoleKeyHandlerResult MoveCursorToEndOfLine(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
+        {
+            context.ConsoleEditorLine.MoveCursorToEndOfLine();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveCursorToStartOfLine(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
+        {
+            context.ConsoleEditorLine.MoveCursorToStartOfLine();
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         private ConsoleKeyHandlerResult RemoveAfterCursor(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
         {
             context.ConsoleEditorLine.RemoveAfterCursor();
@@ -128,18 +138,6 @@ namespace CommandLineEditors.Editor.ReadLine
         {
             context.ConsoleEditorLine.RemoveBeforeCursor();
             context.ConsoleEditorLine.RefreshDisplay();
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult MoveCursorToStartOfLine(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
-        {
-            context.ConsoleEditorLine.MoveCursorToStartOfLine();
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult MoveCursorToEndOfLine(ConsoleKeyInfo keyInfo, ReverseSearchEditorContext context)
-        {
-            context.ConsoleEditorLine.MoveCursorToEndOfLine();
             return ConsoleKeyHandlerResult.Consumed;
         }
 

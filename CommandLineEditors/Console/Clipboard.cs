@@ -1,5 +1,10 @@
 ﻿namespace CommandLineEditors.Console
 {
+    /// <summary>
+    /// The <code>Clipboard</code> gives access to the clipboard
+    /// of this command line editors and allows the user of this
+    /// editors to read and modify the clipboard contents.
+    /// </summary>
     public static class Clipboard
     {
 

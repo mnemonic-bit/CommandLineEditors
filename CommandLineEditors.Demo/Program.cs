@@ -1,5 +1,6 @@
 ﻿using CommandLineEditors.Editor.ReadLine;
 using CommandLineEditors.Editor.Vi;
+using SystemConsole = System.Console;
 
 namespace CommandLineEditors.Demo
 {
@@ -12,7 +13,7 @@ namespace CommandLineEditors.Demo
 
         public static void TestConsoleInput()
         {
-            System.Console.WriteLine("Enter a line, then press enter and the entered text will be presented to you. Keep on entering lines, until fed up. If you wish to stop, just press enter on an empty line.");
+            SystemConsole.WriteLine("Enter a line, then press enter and the entered text will be presented to you. Keep on entering lines, until fed up. If you wish to stop, just press enter on an empty line.");
 
             // the read line instance we will use
             ReadLineEditor readLineInterface = new ReadLineEditor("", "> ");
@@ -32,8 +33,8 @@ namespace CommandLineEditors.Demo
                 // Console.ReadLine() does.
                 result = readLineInterface.ReadLine();
                 // Show the output.
-                System.Console.WriteLine();
-                System.Console.WriteLine($"result: '{result}'");
+                SystemConsole.WriteLine();
+                SystemConsole.WriteLine($"result: '{result}'");
             }
         }
 

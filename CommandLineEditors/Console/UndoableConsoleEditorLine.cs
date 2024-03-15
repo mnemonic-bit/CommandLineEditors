@@ -3,12 +3,8 @@ using System.Collections.Generic;
 
 namespace CommandLineEditors.Console
 {
-    internal class UndoableConsoleEditorLine : IConsoleEditorLine
+    internal sealed class UndoableConsoleEditorLine : IConsoleEditorLine
     {
-
-        private readonly IConsoleEditorLine _consoleEditorLine;
-
-        private readonly List<LineState> _lineStates = new List<LineState>();
 
         public int CurrentCursorPosition
         {
@@ -43,27 +39,6 @@ namespace CommandLineEditors.Console
         public UndoableConsoleEditorLine(IConsoleEditorLine consoleEditorLine)
         {
             _consoleEditorLine = consoleEditorLine;
-        }
-
-        public void Undo()
-        {
-            int lastIndex = _lineStates.Count - 1;
-
-            if (lastIndex < 0)
-            {
-                return;
-            }
-
-            LineState lineState = _lineStates[lastIndex];
-            _lineStates.RemoveAt(lastIndex);
-
-            _consoleEditorLine.Text = lineState.LineContents;
-            _consoleEditorLine.CurrentCursorPosition = lineState.CursorPosition;
-        }
-
-        public void Redo()
-        {
-            throw new NotImplementedException("This operation needs to be implemented.");
         }
 
         public void Close()
@@ -120,6 +95,11 @@ namespace CommandLineEditors.Console
             _consoleEditorLine.Overwrite(str);
         }
 
+        public void Redo()
+        {
+            throw new NotImplementedException("This operation needs to be implemented.");
+        }
+
         public void RefreshDisplay()
         {
             RecordLineState();
@@ -144,6 +124,27 @@ namespace CommandLineEditors.Console
             return _consoleEditorLine.RemoveBeforeCursor();
         }
 
+        public void Undo()
+        {
+            int lastIndex = _lineStates.Count - 1;
+
+            if (lastIndex < 0)
+            {
+                return;
+            }
+
+            LineState lineState = _lineStates[lastIndex];
+            _lineStates.RemoveAt(lastIndex);
+
+            _consoleEditorLine.Text = lineState.LineContents;
+            _consoleEditorLine.CurrentCursorPosition = lineState.CursorPosition;
+        }
+
+
+        private readonly IConsoleEditorLine _consoleEditorLine;
+        private readonly List<LineState> _lineStates = new List<LineState>();
+
+
         private void RecordLineState()
         {
             LineState lineState = new LineState()
@@ -155,7 +156,7 @@ namespace CommandLineEditors.Console
             _lineStates.Add(lineState);
         }
 
-        private class LineState
+        private sealed class LineState
         {
 
             public int CursorPosition { get; set; }

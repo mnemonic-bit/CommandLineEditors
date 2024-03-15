@@ -1,4 +1,6 @@
-﻿using ConsoleColor = System.ConsoleColor;
+﻿using System;
+using System.Runtime.CompilerServices;
+using ConsoleColor = System.ConsoleColor;
 using SystemConsole = System.Console;
 
 namespace CommandLineEditors.Console
@@ -16,7 +18,9 @@ namespace CommandLineEditors.Console
         /// </summary>
         public static ConsoleColor TextColor
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => SystemConsole.ForegroundColor;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => SystemConsole.ForegroundColor = value;
         }
 
@@ -25,19 +29,43 @@ namespace CommandLineEditors.Console
         /// </summary>
         public static ConsoleColor BackgroundColor
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get => SystemConsole.BackgroundColor;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set => SystemConsole.BackgroundColor = value;
         }
 
+        /// <summary>
+        /// Initializes this static class and sets prepares the System.Console
+        /// for our use-case.
+        /// </summary>
         static ConsoleLayer()
         {
             SystemConsole.TreatControlCAsInput = true;
         }
 
         /// <summary>
+        /// Reads a single key from the console and returns a <code>ConsoleKeyInfo</code>
+        /// representing that key and all modifiers pressed at the same time.
+        /// </summary>
+        /// <param name="intercept">Set this to false, if you also want console output for that key.</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ConsoleKeyInfo ReadKey(bool intercept = true)
+        {
+            //while (!Console.KeyAvailable)
+            //{
+            //    Thread.Sleep(5);
+            //}
+
+            return SystemConsole.ReadKey(intercept);
+        }
+
+        /// <summary>
         /// Writes a text starting from the current cursor position.
         /// </summary>
         /// <param name="text"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteString(string text)
         {
             SystemConsole.WriteLine(text);
@@ -49,6 +77,7 @@ namespace CommandLineEditors.Console
         /// <param name="x">The x-position at which the character will be printed.</param>
         /// <param name="y">The y-position at which the character will be printed.</param>
         /// <param name="character">The character which will be printed on the console.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteCharacterAtPosition(int x, int y, char character)
         {
             SetCursorPosition(x, y);
@@ -62,6 +91,7 @@ namespace CommandLineEditors.Console
         /// <param name="x">The x-position to start from.</param>
         /// <param name="y">The y-position to start from.</param>
         /// <param name="posInBuffer">The position in the input buffer from where the output starts.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteStringAtPosition(int x, int y, string text)
         {
             SetCursorPosition(x, y);
@@ -71,6 +101,7 @@ namespace CommandLineEditors.Console
         /// <summary>
         /// Clears the whole console display.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear()
         {
             SystemConsole.Clear();
@@ -79,6 +110,7 @@ namespace CommandLineEditors.Console
         /// <summary>
         /// Moves the cursor to the next line.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void NewLine()
         {
             SystemConsole.WriteLine();
@@ -90,6 +122,7 @@ namespace CommandLineEditors.Console
         /// will be set to that position it was before the method call.
         /// </summary>
         /// <param name="length">The number of characters to write.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearArea(int length)
         {
             ClearAreaAtPosition(SystemConsole.CursorLeft, SystemConsole.CursorTop, length);
@@ -103,6 +136,7 @@ namespace CommandLineEditors.Console
         /// <param name="x">The x-position on the console display to be cleared.</param>
         /// <param name="y">The y-position on the console display to be cleared.</param>
         /// <param name="length">The number of characters that will be cleared.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearAreaAtPosition(int x, int y, int length)
         {
             SetCursorPosition(x, y);
@@ -119,6 +153,7 @@ namespace CommandLineEditors.Console
         /// </summary>
         /// <param name="x">The new x-position of the cursor.</param>
         /// <param name="y">The new y-position of the cursor.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetCursorPosition(int x, int y)
         {
             int windowWidth = SystemConsole.WindowWidth;

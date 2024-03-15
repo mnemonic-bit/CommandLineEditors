@@ -4,25 +4,8 @@ using SystemConsole = System.Console;
 
 namespace CommandLineEditors.Console
 {
-    internal class ConsoleEditorLine : IConsoleEditorLine
+    internal sealed class ConsoleEditorLine : IConsoleEditorLine
     {
-
-        private readonly int _editorLineStartPositionX;
-        private readonly int _editorLineStartPositionY;
-        private readonly string _prefix;
-
-        private readonly int _editableAreaStartPositionX;
-        private readonly int _editableAreaStartPositionY;
-
-        private int _positionInInputBuffer;
-
-        private enum OperationMode { InsertMode, OverwriteMode };
-
-        private OperationMode _operationMode;
-
-        private readonly StringBuilder _inputBuffer;
-
-        private string _previewString;
 
         /// <summary>
         /// Gets or sets the preview-string which is appended at
@@ -74,7 +57,7 @@ namespace CommandLineEditors.Console
         }
 
         public ConsoleEditorLine()
-            : this("")
+            : this(string.Empty)
         {
         }
 
@@ -100,17 +83,6 @@ namespace CommandLineEditors.Console
         public void Close()
         {
             ConsoleLayer.ClearAreaAtPosition(_editorLineStartPositionX, _editorLineStartPositionY, _prefix.Length + _inputBuffer.Length + _previewString.Length);
-        }
-
-        public void RefreshDisplay()
-        {
-            ConsoleLayer.WriteStringAtPosition(_editorLineStartPositionX, _editorLineStartPositionY, _prefix);
-            ConsoleLayer.WriteStringAtPosition(_editableAreaStartPositionX, _editableAreaStartPositionY, _inputBuffer.ToString());
-            System.ConsoleColor colorToRestore = ConsoleLayer.TextColor;
-            ConsoleLayer.TextColor = System.ConsoleColor.DarkGray;
-            ConsoleLayer.WriteString(_previewString);
-            ConsoleLayer.TextColor = colorToRestore;
-            UpdateCursorPosition();
         }
 
         public void Insert(char ch)
@@ -162,6 +134,17 @@ namespace CommandLineEditors.Console
             UpdateCursorPosition();
         }
 
+        public void RefreshDisplay()
+        {
+            ConsoleLayer.WriteStringAtPosition(_editorLineStartPositionX, _editorLineStartPositionY, _prefix);
+            ConsoleLayer.WriteStringAtPosition(_editableAreaStartPositionX, _editableAreaStartPositionY, _inputBuffer.ToString());
+            System.ConsoleColor colorToRestore = ConsoleLayer.TextColor;
+            ConsoleLayer.TextColor = System.ConsoleColor.DarkGray;
+            ConsoleLayer.WriteString(_previewString);
+            ConsoleLayer.TextColor = colorToRestore;
+            UpdateCursorPosition();
+        }
+
         public char RemoveBeforeCursor()
         {
             char removedChar = '\0';
@@ -190,54 +173,6 @@ namespace CommandLineEditors.Console
             }
 
             return removedChar;
-        }
-
-        public string Remove(int startPos, int count)
-        {
-            string removedText = null;
-
-            if (startPos + count - 1 < _inputBuffer.Length)
-            {
-                int newCursorPosition = CurrentCursorPosition;
-                if (newCursorPosition > startPos && newCursorPosition <= startPos + count)
-                {
-                    newCursorPosition = startPos;
-                }
-
-                (int posX, int PosY) = CalculatePositionOnConsole(startPos);
-                removedText = _inputBuffer.ToString().Substring(startPos, count);
-                _inputBuffer.Remove(startPos, count);
-                ConsoleLayer.WriteStringAtPosition(posX, PosY, _inputBuffer.ToString(startPos, _inputBuffer.Length - startPos));
-                ConsoleLayer.ClearArea(count);
-
-                CurrentCursorPosition = newCursorPosition;
-            }
-
-            return removedText;
-        }
-
-        public void Overwrite(char ch)
-        {
-            if (_positionInInputBuffer == _inputBuffer.Length)
-            {
-                (int posX, int PosY) = CalculatePositionOnConsole();
-                ConsoleLayer.WriteCharacterAtPosition(posX, PosY, ch);
-                _inputBuffer.Append(ch);
-                _positionInInputBuffer++;
-            }
-            else
-            {
-                _inputBuffer.Replace(_inputBuffer[_positionInInputBuffer], ch, _positionInInputBuffer, 1);
-                (int posX, int PosY) = CalculatePositionOnConsole();
-                ConsoleLayer.WriteCharacterAtPosition(posX, PosY, ch);
-                _positionInInputBuffer++;
-            }
-            UpdateCursorPosition();
-        }
-
-        public void Overwrite(string str)
-        {
-            // TODO: implment this
         }
 
         public void MoveCursorLeft()
@@ -269,6 +204,73 @@ namespace CommandLineEditors.Console
             _positionInInputBuffer = _inputBuffer.Length;
             UpdateCursorPosition();
         }
+
+        public void Overwrite(char ch)
+        {
+            if (_positionInInputBuffer == _inputBuffer.Length)
+            {
+                (int posX, int PosY) = CalculatePositionOnConsole();
+                ConsoleLayer.WriteCharacterAtPosition(posX, PosY, ch);
+                _inputBuffer.Append(ch);
+                _positionInInputBuffer++;
+            }
+            else
+            {
+                _inputBuffer.Replace(_inputBuffer[_positionInInputBuffer], ch, _positionInInputBuffer, 1);
+                (int posX, int PosY) = CalculatePositionOnConsole();
+                ConsoleLayer.WriteCharacterAtPosition(posX, PosY, ch);
+                _positionInInputBuffer++;
+            }
+            UpdateCursorPosition();
+        }
+
+        public void Overwrite(string str)
+        {
+            // TODO: implment this
+        }
+
+        public string Remove(int startPos, int count)
+        {
+            string removedText = null;
+
+            if (startPos + count - 1 < _inputBuffer.Length)
+            {
+                int newCursorPosition = CurrentCursorPosition;
+                if (newCursorPosition > startPos && newCursorPosition <= startPos + count)
+                {
+                    newCursorPosition = startPos;
+                }
+
+                (int posX, int PosY) = CalculatePositionOnConsole(startPos);
+                removedText = _inputBuffer.ToString().Substring(startPos, count);
+                _inputBuffer.Remove(startPos, count);
+                ConsoleLayer.WriteStringAtPosition(posX, PosY, _inputBuffer.ToString(startPos, _inputBuffer.Length - startPos));
+                ConsoleLayer.ClearArea(count);
+
+                CurrentCursorPosition = newCursorPosition;
+            }
+
+            return removedText;
+        }
+
+
+        private readonly int _editorLineStartPositionX;
+        private readonly int _editorLineStartPositionY;
+        private readonly string _prefix;
+
+        private readonly int _editableAreaStartPositionX;
+        private readonly int _editableAreaStartPositionY;
+
+        private int _positionInInputBuffer;
+
+        private enum OperationMode { InsertMode, OverwriteMode };
+
+        private OperationMode _operationMode;
+
+        private readonly StringBuilder _inputBuffer;
+
+        private string _previewString;
+
 
         private void UpdateCursorPosition()
         {

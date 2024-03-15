@@ -2,7 +2,7 @@
 
 namespace CommandLineEditors.Editor.ReadLine
 {
-    internal class ReadLineEditorContext : IEditorContext
+    internal sealed class ReadLineEditorContext : IEditorContext
     {
 
         public IConsoleEditorLine ConsoleEditorLine { get; set; }
