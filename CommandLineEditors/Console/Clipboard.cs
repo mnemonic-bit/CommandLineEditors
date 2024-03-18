@@ -8,7 +8,7 @@
     public static class Clipboard
     {
 
-        private static string _text = null;
+        private static string _text = string.Empty;
 
         public static string GetText()
         {

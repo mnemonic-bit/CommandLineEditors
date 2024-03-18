@@ -79,6 +79,18 @@ namespace CommandLineEditors.Editor.Vi
         private readonly LineEditor<ViLineEditorContext> _lineEditor;
 
 
+        private ConsoleKeyHandlerResult DefaultCommandModeKeyHandler(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
+        {
+            //TODO: implement this!!
+            if ((keyInfo.Modifiers & (ConsoleModifiers.Alt | ConsoleModifiers.Control)) > 0)
+            {
+                return ConsoleKeyHandlerResult.NotConsumed;
+            }
+
+            context.ConsoleEditorLine.Insert(keyInfo.KeyChar);
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         private ConsoleKeyHandlerResult DefaultEditModeKeyHandler(ConsoleKeyInfo keyInfo, ViLineEditorContext context)
         {
             if ((keyInfo.Modifiers & (ConsoleModifiers.Alt | ConsoleModifiers.Control)) > 0)
@@ -108,7 +120,7 @@ namespace CommandLineEditors.Editor.Vi
 
         private ConsoleKeyHandlerMap<ViLineEditorContext> InitCommandModeKeyHandlers()
         {
-            ConsoleKeyHandlerMap<ViLineEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ViLineEditorContext>();
+            ConsoleKeyHandlerMap<ViLineEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ViLineEditorContext>(DefaultCommandModeKeyHandler);
 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), FinishInput);
             keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, _commonHandlers.MoveCursorLeft);
@@ -140,9 +152,7 @@ namespace CommandLineEditors.Editor.Vi
 
         private ConsoleKeyHandlerMap<ViLineEditorContext> InitEditModeKeyHandlers()
         {
-            ConsoleKeyHandlerMap<ViLineEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ViLineEditorContext>();
-
-            keyHandlerMap.DefaultKeyHandler = DefaultEditModeKeyHandler;
+            ConsoleKeyHandlerMap<ViLineEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ViLineEditorContext>(DefaultEditModeKeyHandler);
 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), FinishInput);
             keyHandlerMap.AddKeyHandler(ConsoleKey.Delete, _commonHandlers.RemoveAfterCursor);

@@ -1,6 +1,7 @@
 ﻿using CommandLineEditors.Console;
 using CommandLineEditors.Data;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace CommandLineEditors.Editor.ReadLine
@@ -38,7 +39,7 @@ namespace CommandLineEditors.Editor.ReadLine
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryMoveDown(out TEditorConsoleLine historyEntry)
+        public bool TryMoveDown([NotNullWhen(true)] out TEditorConsoleLine? historyEntry)
         {
             historyEntry = default;
 
@@ -53,7 +54,7 @@ namespace CommandLineEditors.Editor.ReadLine
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryMoveFirst(out TEditorConsoleLine historyEntry)
+        public bool TryMoveFirst([NotNullWhen(true)] out TEditorConsoleLine? historyEntry)
         {
             historyEntry = default;
 
@@ -68,7 +69,7 @@ namespace CommandLineEditors.Editor.ReadLine
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryMoveLast(out TEditorConsoleLine historyEntry)
+        public bool TryMoveLast([NotNullWhen(true)] out TEditorConsoleLine? historyEntry)
         {
             historyEntry = default;
 
@@ -83,7 +84,7 @@ namespace CommandLineEditors.Editor.ReadLine
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryMoveUp(out TEditorConsoleLine historyEntry)
+        public bool TryMoveUp([NotNullWhen(true)] out TEditorConsoleLine? historyEntry)
         {
             historyEntry = default;
 

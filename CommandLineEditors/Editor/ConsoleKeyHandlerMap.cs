@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace CommandLineEditors.Editor
@@ -10,8 +11,9 @@ namespace CommandLineEditors.Editor
 
         public Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult> DefaultKeyHandler { get; set; }
 
-        public ConsoleKeyHandlerMap()
+        public ConsoleKeyHandlerMap(Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult> defaultKeyHandler)
         {
+            DefaultKeyHandler = defaultKeyHandler;
             _keyHandlers = new Dictionary<ConsoleKeyInfo, Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult>>();
         }
 
@@ -52,13 +54,13 @@ namespace CommandLineEditors.Editor
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetKeyHandler(ConsoleKeyInfo keyInfo, out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult> handler)
+        public bool TryGetKeyHandler(ConsoleKeyInfo keyInfo, [NotNullWhen(true)] out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult>? handler)
         {
             return _keyHandlers.TryGetValue(keyInfo, out handler);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryGetKeyHandler(ConsoleKey key, out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult> handler)
+        public bool TryGetKeyHandler(ConsoleKey key, [NotNullWhen(true)] out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult>? handler)
         {
             return TryGetKeyHandler(ConsoleKeyInfo(key), out handler);
         }

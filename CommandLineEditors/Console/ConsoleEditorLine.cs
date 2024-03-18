@@ -231,7 +231,7 @@ namespace CommandLineEditors.Console
 
         public string Remove(int startPos, int count)
         {
-            string removedText = null;
+            string removedText = string.Empty;
 
             if (startPos + count - 1 < _inputBuffer.Length)
             {

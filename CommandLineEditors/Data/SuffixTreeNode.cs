@@ -80,7 +80,7 @@ namespace CommandLineEditors.Data
         /// a tree node as his parent node.</returns>
         public SuffixTreeNode<E> CreateTreeNode(E label)
         {
-            if (!childNodes.TryGetValue(label, out SuffixTreeNode<E> node))
+            if (!childNodes.TryGetValue(label, out SuffixTreeNode<E>? node))
             {
                 node = new SuffixTreeNode<E>();
                 childNodes.Add(label, node);
@@ -94,9 +94,9 @@ namespace CommandLineEditors.Data
         /// <param name="label"></param>
         /// <returns>Returns the child node that is registered at this
         /// tree node for the label, or null if nothing is found.</returns>
-        public SuffixTreeNode<E> GetTreeNode(E label)
+        public SuffixTreeNode<E>? GetTreeNode(E label)
         {
-            childNodes.TryGetValue(label, out SuffixTreeNode<E> node);
+            childNodes.TryGetValue(label, out SuffixTreeNode<E>? node);
             return node;
         }
 

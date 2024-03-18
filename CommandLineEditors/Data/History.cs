@@ -12,14 +12,14 @@ namespace CommandLineEditors.Data
         /// </summary>
         public int Count => _history.Count;
 
-        public TEntry this[int pos]
+        public TEntry? this[int pos]
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
                 if (pos < 0 || pos >= _history.Count)
                 {
-                    return default(TEntry);
+                    return default;
                 }
                 return _history[pos];
             }
@@ -48,7 +48,7 @@ namespace CommandLineEditors.Data
         /// <param name="predicate"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public TEntry FindLast(Predicate<TEntry> predicate)
+        public TEntry? FindLast(Predicate<TEntry> predicate)
         {
             return _history.FindLast(predicate);
         }
@@ -70,7 +70,7 @@ namespace CommandLineEditors.Data
         /// <param name="historyEntry"></param>
         /// <returns>Returns true if an older history element existed, otherwise false.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryMoveUp(out TEntry historyEntry)
+        public bool TryMoveUp(out TEntry? historyEntry)
         {
             historyEntry = default;
 
@@ -85,7 +85,7 @@ namespace CommandLineEditors.Data
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryMoveDown(out TEntry historyEntry)
+        public bool TryMoveDown(out TEntry? historyEntry)
         {
             historyEntry = default;
 

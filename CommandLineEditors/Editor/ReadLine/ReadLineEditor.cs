@@ -51,7 +51,7 @@ namespace CommandLineEditors.Editor.ReadLine
         {
             _prompt = prompt;
             _context = new ReadLineEditorContext();
-            _lineEditor = new LineEditor<ReadLineEditorContext>(_context, text, prompt, InitKeyHandlers());
+            _lineEditor = new LineEditor<ReadLineEditorContext>(_context, keyHandlerMap: InitKeyHandlers(), text: text, prefix: prompt);
         }
 
         public void Close()
@@ -108,9 +108,7 @@ namespace CommandLineEditors.Editor.ReadLine
 
         private ConsoleKeyHandlerMap<ReadLineEditorContext> InitKeyHandlers()
         {
-            ConsoleKeyHandlerMap<ReadLineEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ReadLineEditorContext>();
-
-            keyHandlerMap.DefaultKeyHandler = DefaultConsumeKeyInfo;
+            ConsoleKeyHandlerMap<ReadLineEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ReadLineEditorContext>(DefaultConsumeKeyInfo);
 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), EndLineEntryAndInsertHistory);
             keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, _commonHandlers.MoveCursorLeft); // 
@@ -239,7 +237,7 @@ namespace CommandLineEditors.Editor.ReadLine
         private ConsoleKeyHandlerResult MoveOneDownInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             context.ConsoleEditorLine.Close();
-            if (context.History.TryMoveDown(out UndoableConsoleEditorLine editorLine))
+            if (context.History.TryMoveDown(out UndoableConsoleEditorLine? editorLine))
             {
                 context.ConsoleEditorLine = editorLine;
             }
@@ -250,7 +248,7 @@ namespace CommandLineEditors.Editor.ReadLine
         private ConsoleKeyHandlerResult MoveOneUpInHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             context.ConsoleEditorLine.Close();
-            if (context.History.TryMoveUp(out UndoableConsoleEditorLine editorLine))
+            if (context.History.TryMoveUp(out UndoableConsoleEditorLine? editorLine))
             {
                 context.ConsoleEditorLine = editorLine;
             }
@@ -261,7 +259,7 @@ namespace CommandLineEditors.Editor.ReadLine
         private ConsoleKeyHandlerResult MoveToFirstHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             context.ConsoleEditorLine.Close();
-            if (context.History.TryMoveFirst(out UndoableConsoleEditorLine editorLine))
+            if (context.History.TryMoveFirst(out UndoableConsoleEditorLine? editorLine))
             {
                 context.ConsoleEditorLine = editorLine;
             }
@@ -271,7 +269,7 @@ namespace CommandLineEditors.Editor.ReadLine
 
         private ConsoleKeyHandlerResult MoveToLastHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
-            if (context.History.TryMoveLast(out UndoableConsoleEditorLine editorLine))
+            if (context.History.TryMoveLast(out UndoableConsoleEditorLine? editorLine))
             {
                 context.ConsoleEditorLine.Close();
                 context.ConsoleEditorLine = editorLine;

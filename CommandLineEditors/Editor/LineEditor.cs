@@ -18,7 +18,7 @@ namespace CommandLineEditors.Editor
 
         public ConsoleKeyHandlerMap<TContext> KeyHandlerMap { get; set; }
 
-        public LineEditor(TContext context, string text = "", string prefix = "", ConsoleKeyHandlerMap<TContext> keyHandlerMap = null)
+        public LineEditor(TContext context, ConsoleKeyHandlerMap<TContext> keyHandlerMap, string text = "", string prefix = "")
         {
             _context = context;
             _prefix = prefix;
@@ -39,7 +39,7 @@ namespace CommandLineEditors.Editor
                 ConsoleKeyInfo keyInfo = ConsoleLayer.ReadKey();
 
                 result = ConsoleKeyHandlerResult.NotConsumed;
-                if (KeyHandlerMap.TryGetKeyHandler(keyInfo, out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult> handler))
+                if (KeyHandlerMap.TryGetKeyHandler(keyInfo, out Func<ConsoleKeyInfo, TContext, ConsoleKeyHandlerResult>? handler))
                 {
                     result = handler(keyInfo, _context);
                 }
@@ -76,7 +76,7 @@ namespace CommandLineEditors.Editor
             }
             else
             {
-                return null;
+                return string.Empty;
             }
         }
 

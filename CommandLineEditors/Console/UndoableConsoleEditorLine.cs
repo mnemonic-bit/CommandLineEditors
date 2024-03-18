@@ -161,12 +161,7 @@ namespace CommandLineEditors.Console
 
         private void RecordLineState()
         {
-            LineState lineState = new LineState()
-            {
-                CursorPosition = _consoleEditorLine.CurrentCursorPosition,
-                LineContents = _consoleEditorLine.Text
-            };
-
+            LineState lineState = new LineState(_consoleEditorLine.CurrentCursorPosition, _consoleEditorLine.Text);
             _lineStates.Add(lineState);
         }
 
@@ -177,6 +172,11 @@ namespace CommandLineEditors.Console
 
             public string LineContents { get; set; }
 
+            public LineState(int cursorPosition, string lineContents)
+            {
+                CursorPosition = cursorPosition;
+                LineContents = lineContents;
+            }
         }
 
     }

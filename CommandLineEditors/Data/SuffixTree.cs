@@ -79,7 +79,7 @@ namespace CommandLineEditors.Data
 
             foreach (ElementBaseType label in currentNode.Labels())
             {
-                SuffixTreeNode<ElementBaseType> treeNode = currentNode.GetTreeNode(label);
+                SuffixTreeNode<ElementBaseType>? treeNode = currentNode.GetTreeNode(label);
                 if (treeNode != null)
                 {
                     List<ElementBaseType[]> matches = CollectMatchingElements(treeNode);
@@ -114,7 +114,7 @@ namespace CommandLineEditors.Data
 
             // gets the child node stored in the current node
             // as a child for the given label.
-            SuffixTreeNode<ElementBaseType> childNode = currentNode.GetTreeNode(currentLabel);
+            SuffixTreeNode<ElementBaseType>? childNode = currentNode.GetTreeNode(currentLabel);
 
             // if there is no registered child node, we just pass the empty list
             // as a result to the callee.
@@ -164,7 +164,7 @@ namespace CommandLineEditors.Data
         {
             if (currentPos < element.Length)
             {
-                SuffixTreeNode<ElementBaseType> nextNode = currentNode.GetTreeNode(element[currentPos]);
+                SuffixTreeNode<ElementBaseType>? nextNode = currentNode.GetTreeNode(element[currentPos]);
                 // is there is no child node for the current label,
                 // the element that the user requests to remove is
                 // not present in the tree. We do nothing and return

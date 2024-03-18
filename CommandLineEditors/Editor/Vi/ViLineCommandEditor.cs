@@ -10,7 +10,7 @@ namespace CommandLineEditors.Editor.Vi
         {
             _prompt = prompt;
             _context = new ViLineCommandEditorContext();
-            _lineEditor = new LineEditor<ViLineCommandEditorContext>(_context, prefix: ":", keyHandlerMap: InitKeyHandlers());
+            _lineEditor = new LineEditor<ViLineCommandEditorContext>(_context, keyHandlerMap: InitKeyHandlers(), prefix: ":");
         }
 
         public void Close()
@@ -32,7 +32,7 @@ namespace CommandLineEditors.Editor.Vi
 
         private ConsoleKeyHandlerResult AbortCommand(ConsoleKeyInfo keyInfo, ViLineCommandEditorContext context)
         {
-            context.Result = null;
+            context.Result = string.Empty;
             context.Aborted = true;
 
             return ConsoleKeyHandlerResult.Aborted;
@@ -65,15 +65,13 @@ namespace CommandLineEditors.Editor.Vi
         private void InitContext(ViLineCommandEditorContext context, string prompt)
         {
             context.ConsoleEditorLine = new ConsoleEditorLine("", prompt);
-            context.Result = null;
+            context.Result = string.Empty;
         }
 
         private ConsoleKeyHandlerMap<ViLineCommandEditorContext> InitKeyHandlers()
         {
-            ConsoleKeyHandlerMap<ViLineCommandEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ViLineCommandEditorContext>
-            {
-                DefaultKeyHandler = HandleSearchInput
-            };
+            ConsoleKeyHandlerMap<ViLineCommandEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ViLineCommandEditorContext>(HandleSearchInput);
+
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), ReturnFromEnteringCommand);//
             keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, MoveCursorLeft);
             keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, MoveCursorRight);

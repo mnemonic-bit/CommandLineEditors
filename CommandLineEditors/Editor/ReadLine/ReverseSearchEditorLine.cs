@@ -59,7 +59,7 @@ namespace CommandLineEditors.Editor.ReadLine
                 return ConsoleKeyHandlerResult.Consumed;
             }
 
-            string searchResult = context.History[lastIndex];
+            string? searchResult = context.History[lastIndex];
             if (!string.IsNullOrEmpty(searchResult))
             {
                 context.Hit = searchResult;
@@ -80,9 +80,8 @@ namespace CommandLineEditors.Editor.ReadLine
 
         private ConsoleKeyHandlerMap<ReverseSearchEditorContext> InitKeyHandlers()
         {
-            ConsoleKeyHandlerMap<ReverseSearchEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ReverseSearchEditorContext>();
+            ConsoleKeyHandlerMap<ReverseSearchEditorContext> keyHandlerMap = new ConsoleKeyHandlerMap<ReverseSearchEditorContext>(HandleSearchInput);
 
-            keyHandlerMap.DefaultKeyHandler = HandleSearchInput;
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), ReturnFromSearch);
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\a', ConsoleKey.G, false, false, true), AbortSearch);
             keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, MoveCursorLeft);
