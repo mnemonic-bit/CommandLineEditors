@@ -90,6 +90,13 @@ namespace CommandLineEditors.Extensions
         {
             position = -1;
 
+            // We have to accomodate the fact that the cursor might be placed
+            // right after the last character in the line, which will lead to
+            // exceptions in the code, sice that character does not exist.
+            // Because we are searching in the left direction, we nudge the current
+            // position in that direction a bit.
+            currentPosition--;
+
             while (currentPosition >= 0)
             {
                 // Find a position that is not whitespace, before we check

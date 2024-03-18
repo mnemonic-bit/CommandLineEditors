@@ -160,7 +160,7 @@ namespace CommandLineEditors.Editor.ReadLine
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0023', ConsoleKey.D3, true, true, false), CommentLineAndStartNewOne); // Alt-#
 
             // Ctrl-Alt-key-combinations
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u001c', ConsoleKey.Oem6, false, true, true), MoveBackwardToSingleCharacterWord); // Ctrl-Alt-]
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0000', ConsoleKey.Oem6, false, true, true), MoveBackwardToSingleCharacterWord); // Ctrl-Alt-]
 
             return keyHandlerMap;
         }

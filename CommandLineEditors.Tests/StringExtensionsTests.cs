@@ -205,6 +205,21 @@ namespace CommandLineEditors.Tests
         }
 
         [Fact]
+        public void TryFindSingleCharacterWordToTheLeft_ShouldReturnStartIndexOfSingleWord_WhenSingleWordIsToTheRightOfTheCurrentPosition4()
+        {
+            // Arrange
+            string text = "ab c d efg";
+            int currentPosition = 5;
+
+            // Act
+            bool result = text.TryFindSingleCharacterWordToTheLeft(currentPosition, out int foundPosition);
+
+            // Assert
+            result.Should().BeTrue();
+            foundPosition.Should().Be(3);
+        }
+
+        [Fact]
         public void TryFindSingleCharacterWordToTheLeft_ShouldReturnMinusOne_WhenNoSingleWordCanBeFound1()
         {
             // Arrange
@@ -225,6 +240,51 @@ namespace CommandLineEditors.Tests
             // Arrange
             string text = "abcd 1234";
             int currentPosition = 7;
+
+            // Act
+            bool result = text.TryFindSingleCharacterWordToTheLeft(currentPosition, out int foundPosition);
+
+            // Assert
+            result.Should().BeFalse();
+            foundPosition.Should().Be(-1);
+        }
+
+        [Fact]
+        public void TryFindSingleCharacterWordToTheLeft_ShouldReturnMinusOne_WhenNoSingleWordCanBeFound3()
+        {
+            // Arrange
+            string text = "abcd 1234";
+            int currentPosition = 9;
+
+            // Act
+            bool result = text.TryFindSingleCharacterWordToTheLeft(currentPosition, out int foundPosition);
+
+            // Assert
+            result.Should().BeFalse();
+            foundPosition.Should().Be(-1);
+        }
+
+        [Fact]
+        public void TryFindSingleCharacterWordToTheLeft_ShouldReturnMinusOne_WhenNoSingleWordCanBeFound4()
+        {
+            // Arrange
+            string text = "abcd 1234";
+            int currentPosition = 0;
+
+            // Act
+            bool result = text.TryFindSingleCharacterWordToTheLeft(currentPosition, out int foundPosition);
+
+            // Assert
+            result.Should().BeFalse();
+            foundPosition.Should().Be(-1);
+        }
+
+        [Fact]
+        public void TryFindSingleCharacterWordToTheLeft_ShouldReturnMinusOne_WhenNoSingleWordCanBeFound5()
+        {
+            // Arrange
+            string text = "ab c defg";
+            int currentPosition = 3;
 
             // Act
             bool result = text.TryFindSingleCharacterWordToTheLeft(currentPosition, out int foundPosition);
