@@ -11,6 +11,4 @@ providing a history of entries to the user, accessible via the up- and down-keys
 Currently there is only one line-editor fully implemented, which emulates the 
 ReadLine library, similar to a Emacs key-binding.
 
-For more information, and a quick-start, please visit the project page at
-
-    https://github.com/mnemonic-bit/CommandLineEditors
+For more information, and a quick-start, please visit the project page at [GitHub.com](https://github.com/mnemonic-bit/CommandLineEditors).

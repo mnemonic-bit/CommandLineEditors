@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineEditors", "CommandLineEditors\CommandLineEditors.csproj", "{722678F0-F13A-418B-964B-C7EB23AFB5CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineEditors", "CommandLineEditors\CommandLineEditors.csproj", "{722678F0-F13A-418B-964B-C7EB23AFB5CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineEditors.Demo", "CommandLineEditors.Demo\CommandLineEditors.Demo.csproj", "{9966A7C4-DC39-4FCA-885F-6E5EC409D8CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineEditors.Demo", "CommandLineEditors.Demo\CommandLineEditors.Demo.csproj", "{9966A7C4-DC39-4FCA-885F-6E5EC409D8CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleKeyReader", "ConsoleKeyReader\ConsoleKeyReader.csproj", "{DAFFFDD6-4588-4B22-8885-0110AD40CD16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleKeyReader", "ConsoleKeyReader\ConsoleKeyReader.csproj", "{DAFFFDD6-4588-4B22-8885-0110AD40CD16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineEditors.Tests", "CommandLineEditors.Tests\CommandLineEditors.Tests.csproj", "{A3403710-2568-44C0-A62D-3FE7C958AD37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{722678F0-F13A-418B-964B-C7EB23AFB5CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +57,20 @@ Global
 		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x64.Build.0 = Release|Any CPU
 		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x86.ActiveCfg = Release|Any CPU
 		{DAFFFDD6-4588-4B22-8885-0110AD40CD16}.Release|x86.Build.0 = Release|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Debug|x64.Build.0 = Debug|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Debug|x86.Build.0 = Debug|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Release|x64.ActiveCfg = Release|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Release|x64.Build.0 = Release|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Release|x86.ActiveCfg = Release|Any CPU
+		{A3403710-2568-44C0-A62D-3FE7C958AD37}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

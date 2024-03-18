@@ -112,48 +112,55 @@ namespace CommandLineEditors.Editor.ReadLine
 
             keyHandlerMap.DefaultKeyHandler = DefaultConsumeKeyInfo;
 
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), AbortWithHistory);
-            keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, _commonHandlers.MoveCursorLeft);//
-            keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, _commonHandlers.MoveCursorRight);//
-            keyHandlerMap.AddKeyHandler(ConsoleKey.UpArrow, MoveOneUpInHistory);//
-            keyHandlerMap.AddKeyHandler(ConsoleKey.DownArrow, MoveOneDownInHistory);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\r', ConsoleKey.Enter, false, false, false), EndLineEntryAndInsertHistory);
+            keyHandlerMap.AddKeyHandler(ConsoleKey.LeftArrow, _commonHandlers.MoveCursorLeft); // 
+            keyHandlerMap.AddKeyHandler(ConsoleKey.RightArrow, _commonHandlers.MoveCursorRight); // 
+            keyHandlerMap.AddKeyHandler(ConsoleKey.UpArrow, MoveOneUpInHistory); // 
+            keyHandlerMap.AddKeyHandler(ConsoleKey.DownArrow, MoveOneDownInHistory); // 
             keyHandlerMap.AddKeyHandler(ConsoleKey.Insert, (keyInfo, context) => { context.InsertMode = !context.InsertMode; return ConsoleKeyHandlerResult.Consumed; });
-            keyHandlerMap.AddKeyHandler(ConsoleKey.Delete, _commonHandlers.RemoveAfterCursor);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.Backspace, false, false, false), _commonHandlers.RemoveBeforeCursor);//
-            keyHandlerMap.AddKeyHandler(ConsoleKey.Home, _commonHandlers.MoveCursorToStartOfLine);//
-            keyHandlerMap.AddKeyHandler(ConsoleKey.End, _commonHandlers.MoveCursorToEndOfLine);//
+            keyHandlerMap.AddKeyHandler(ConsoleKey.Delete, RemoveAfterCursor); // DELETE
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.Backspace, false, false, false), _commonHandlers.RemoveBeforeCursor); // BACKSPACE
+            keyHandlerMap.AddKeyHandler(ConsoleKey.Home, _commonHandlers.MoveCursorToStartOfLine); // HOME
+            keyHandlerMap.AddKeyHandler(ConsoleKey.End, _commonHandlers.MoveCursorToEndOfLine); // END
 
             // Ctrl-key-combinations
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0001', ConsoleKey.A, false, false, true), ProcessCtrlA);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0002', ConsoleKey.B, false, false, true), ProcessCtrlB);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0004', ConsoleKey.D, false, false, true), ProcessCtrlD);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0005', ConsoleKey.E, false, false, true), ProcessCtrlE);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0006', ConsoleKey.F, false, false, true), ProcessCtrlF);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.H, false, false, true), _commonHandlers.RemoveBeforeCursor);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0001', ConsoleKey.A, false, false, true), ProcessCtrlA); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0002', ConsoleKey.B, false, false, true), ProcessCtrlB); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0004', ConsoleKey.D, false, false, true), ProcessCtrlD); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0005', ConsoleKey.E, false, false, true), ProcessCtrlE); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0006', ConsoleKey.F, false, false, true), ProcessCtrlF); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0008', ConsoleKey.H, false, false, true), _commonHandlers.RemoveBeforeCursor); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0009', ConsoleKey.I, false, false, true), ProcessTabExtension);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000b', ConsoleKey.K, false, false, true), RemoveLineAfterCursor);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000b', ConsoleKey.K, false, false, true), RemoveLineAfterCursor); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000c', ConsoleKey.L, false, false, true), ClearScreen);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000e', ConsoleKey.N, false, false, true), ProcessCtrlN);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0010', ConsoleKey.P, false, false, true), MoveOneUpInHistory);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0012', ConsoleKey.R, false, false, true), ProcessCtrlR);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0014', ConsoleKey.T, false, false, true), ProcessCtrlT);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0015', ConsoleKey.U, false, false, true), ProcessCtrlU);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u000e', ConsoleKey.N, false, false, true), ProcessCtrlN); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0010', ConsoleKey.P, false, false, true), MoveOneUpInHistory); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0012', ConsoleKey.R, false, false, true), ProcessCtrlR); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0014', ConsoleKey.T, false, false, true), ProcessCtrlT); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0015', ConsoleKey.U, false, false, true), ProcessCtrlU); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0016', ConsoleKey.V, false, false, true), ProcessCtrlV);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0017', ConsoleKey.W, false, false, true), RemoveWordBeforeCursor);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0017', ConsoleKey.W, false, false, true), RemoveWordBeforeCursor); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0018', ConsoleKey.X, false, false, true), ProcessCtrlX);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0019', ConsoleKey.Y, false, false, true), PasteClipboard);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0019', ConsoleKey.Y, false, false, true), PasteClipboard); // 
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u001d', ConsoleKey.Oem6, false, false, true), MoveForwardToSingleCharacterWord); // Ctrl-]
 
             // Alt-key-combinations
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('b', ConsoleKey.B, false, true, false), _commonHandlers.MoveCursorLeftToStartOfWord);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('c', ConsoleKey.C, false, true, false), _commonHandlers.CapitalizeCharacterUnderCursor);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('d', ConsoleKey.D, false, true, false), RemoveWordAfterCursor);//
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('b', ConsoleKey.B, false, true, false), _commonHandlers.MoveCursorLeftToStartOfWord); // Alt-b
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('c', ConsoleKey.C, false, true, false), _commonHandlers.CapitalizeCharacterUnderCursor); // Alt-c
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('d', ConsoleKey.D, false, true, false), RemoveWordAfterCursor); // Alt-d
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('f', ConsoleKey.F, false, true, false), _commonHandlers.MoveCursorRightToEndOfWord);//
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('l', ConsoleKey.L, false, true, false), _commonHandlers.ChangeCharactersToLowerCaseUpToEndOfWord);//
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0072', ConsoleKey.R, false, true, false), ProcessAltR); // ALT-r
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0072', ConsoleKey.R, false, true, false), ProcessAltR); // Alt-r
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('u', ConsoleKey.U, false, true, false), _commonHandlers.ChangeCharactersToUpperCaseUpToEndOfWord);//
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('.', ConsoleKey.OemPeriod, false, true, false), InsertLastWordOfPreviousHistoryEntry);
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u003c', ConsoleKey.OemComma, true, true, false), MoveToFirstHistoryEntry); // ALT-<
-            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u003e', ConsoleKey.OemPeriod, true, true, false), MoveToLastHistoryEntry); // ALT->
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u003c', ConsoleKey.OemComma, true, true, false), MoveToFirstHistoryEntry); // Alt-<
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u003e', ConsoleKey.OemPeriod, true, true, false), MoveToLastHistoryEntry); // Alt->
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u005c', ConsoleKey.Oem5, false, true, false), RemoveWhitespaceAroundCursor); // Alt-\
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0000', ConsoleKey.Delete, false, true, false), RemoveWordBeforeCursor); // Alt-Delete
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0023', ConsoleKey.D3, true, true, false), CommentLineAndStartNewOne); // Alt-#
+
+            // Ctrl-Alt-key-combinations
+            keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u001c', ConsoleKey.Oem6, false, true, true), MoveBackwardToSingleCharacterWord); // Ctrl-Alt-]
 
             return keyHandlerMap;
         }
@@ -174,7 +181,7 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Aborted;
         }
 
-        private ConsoleKeyHandlerResult AbortWithHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        private ConsoleKeyHandlerResult EndLineEntryAndInsertHistory(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             _history.AppendEntry(context.Result);
             return ConsoleKeyHandlerResult.Finished;
@@ -192,12 +199,40 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
+        private ConsoleKeyHandlerResult CommentLineAndStartNewOne(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            context.ConsoleEditorLine.MoveCursorToStartOfLine();
+            context.ConsoleEditorLine.Insert('#');
+            _history.AppendEntry(context.Result);
+            return ConsoleKeyHandlerResult.Finished;
+        }
+
         private ConsoleKeyHandlerResult InsertLastWordOfPreviousHistoryEntry(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             // inserts the last word of the previous history entry
             // to the current position of the cursor.
             // TODO: implement this
 
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveBackwardToSingleCharacterWord(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            if (_commonHandlers.TryFindSingleCharacterWordToTheLeft(context, out int startOfSingleCharacterWord))
+            {
+                context.ConsoleEditorLine.CurrentCursorPosition = startOfSingleCharacterWord;
+                //context.ConsoleEditorLine.RefreshDisplay();
+            }
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult MoveForwardToSingleCharacterWord(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            if (_commonHandlers.TryFindSingleCharacterWordToTheRight(context, out int startOfSingleCharacterWord))
+            {
+                context.ConsoleEditorLine.CurrentCursorPosition = startOfSingleCharacterWord;
+                //context.ConsoleEditorLine.RefreshDisplay();
+            }
             return ConsoleKeyHandlerResult.Consumed;
         }
 
@@ -250,9 +285,16 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.NotConsumed;
         }
 
+        private ConsoleKeyHandlerResult PasteClipboard(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            string clipboardText = Clipboard.GetText();
+            context.ConsoleEditorLine.Insert(clipboardText);
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         private ConsoleKeyHandlerResult ProcessAltR(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
-            UndoableConsoleEditorLine undoableLine = context?.ConsoleEditorLine as UndoableConsoleEditorLine;
+            UndoableConsoleEditorLine? undoableLine = context?.ConsoleEditorLine as UndoableConsoleEditorLine;
             undoableLine?.UndoAll();
             return ConsoleKeyHandlerResult.Consumed;
         }
@@ -366,7 +408,7 @@ namespace CommandLineEditors.Editor.ReadLine
             {
                 context.CtrlXPressed = false;
                 // Ctrl+x Ctrl+u : Incremental undo, separately remembered for each line.
-                UndoableConsoleEditorLine undoableLine = context?.ConsoleEditorLine as UndoableConsoleEditorLine;
+                UndoableConsoleEditorLine? undoableLine = context?.ConsoleEditorLine as UndoableConsoleEditorLine;
                 undoableLine?.Undo();
                 return ConsoleKeyHandlerResult.Consumed;
             }
@@ -425,17 +467,23 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
-        private ConsoleKeyHandlerResult ToggleCharacterPositions(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        private ConsoleKeyHandlerResult ProcessTabExtension(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
-            if (context.ConsoleEditorLine.CurrentCursorPosition == context.ConsoleEditorLine.Length)
+            // TODO: implement tab-extension here
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
+        private ConsoleKeyHandlerResult RemoveAfterCursor(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            if (context.CtrlXPressed)
             {
+                context.CtrlXPressed = true;
+                // Ctrl-X, DELETE : remove the text before the cursor up to the start of the line
+                _ = _commonHandlers.RemoveTextBeforeCursor(keyInfo, context);
                 return ConsoleKeyHandlerResult.Consumed;
             }
 
-            char removedChar = context.ConsoleEditorLine.RemoveBeforeCursor();
-            context.ConsoleEditorLine.MoveCursorRight();
-            context.ConsoleEditorLine.Insert(removedChar);
-            context.ConsoleEditorLine.MoveCursorLeft();
+            context.ConsoleEditorLine.RemoveAfterCursor();
             return ConsoleKeyHandlerResult.Consumed;
         }
 
@@ -464,6 +512,12 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
+        private ConsoleKeyHandlerResult RemoveWhitespaceAroundCursor(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
+        {
+            var _ = _commonHandlers.RemoveWhitespaceAroundCursor(context);
+            return ConsoleKeyHandlerResult.Consumed;
+        }
+
         private ConsoleKeyHandlerResult RemoveWordBeforeCursor(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             if (context.ConsoleEditorLine.Length == 0)
@@ -473,19 +527,6 @@ namespace CommandLineEditors.Editor.ReadLine
 
             string removedText = _commonHandlers.RemoveWordBeforeCursor(keyInfo, context);
             Clipboard.SetText(removedText);
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult PasteClipboard(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            string clipboardText = Clipboard.GetText();
-            context.ConsoleEditorLine.Insert(clipboardText);
-            return ConsoleKeyHandlerResult.Consumed;
-        }
-
-        private ConsoleKeyHandlerResult ProcessTabExtension(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
-        {
-            // TODO: implement tab-extension here
             return ConsoleKeyHandlerResult.Consumed;
         }
 
@@ -502,24 +543,18 @@ namespace CommandLineEditors.Editor.ReadLine
             return ConsoleKeyHandlerResult.Consumed;
         }
 
-        private int GetStartOfWord(ReadLineEditorContext context)
+        private ConsoleKeyHandlerResult ToggleCharacterPositions(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
-            string currentText = context.ConsoleEditorLine.Text;
-            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            int endPosition = currentText.IndexOf(ch => !ch.IsWhiteSpace(), currentPosition - 1, false);
-            int startPosition = currentText.IndexOf(ch => ch.IsWhiteSpace(), endPosition, false);
-            startPosition++;
-            return startPosition;
-        }
+            if (context.ConsoleEditorLine.CurrentCursorPosition == context.ConsoleEditorLine.Length)
+            {
+                return ConsoleKeyHandlerResult.Consumed;
+            }
 
-        private int GetEndOfWord(ReadLineEditorContext context)
-        {
-            string currentText = context.ConsoleEditorLine.Text;
-            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            int startPosition = currentText.IndexOf(ch => !ch.IsWhiteSpace(), currentPosition, true);
-            int endPosition = currentText.IndexOf(ch => ch.IsWhiteSpace(), startPosition, true);
-            endPosition = endPosition == -1 ? currentText.Length : endPosition;
-            return endPosition;
+            char removedChar = context.ConsoleEditorLine.RemoveBeforeCursor();
+            context.ConsoleEditorLine.MoveCursorRight();
+            context.ConsoleEditorLine.Insert(removedChar);
+            context.ConsoleEditorLine.MoveCursorLeft();
+            return ConsoleKeyHandlerResult.Consumed;
         }
 
     }

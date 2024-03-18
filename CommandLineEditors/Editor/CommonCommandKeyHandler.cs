@@ -57,32 +57,74 @@ namespace CommandLineEditors.Editor
             return ConsoleKeyHandlerResult.Consumed;
         }
 
+        public bool TryFindSingleCharacterWordToTheLeft(TContext context, out int position)
+        {
+            string currentText = context.ConsoleEditorLine.Text;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return currentText.TryFindSingleCharacterWordToTheLeft(currentPosition, out position);
+        }
+
+        /// <summary>
+        /// This method tries to find a word to the right which has a length
+        /// of one character. If no such word is found, which method returns
+        /// false.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public bool TryFindSingleCharacterWordToTheRight(TContext context, out int position)
+        {
+            string currentText = context.ConsoleEditorLine.Text;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return currentText.TryFindSingleCharacterWordToTheRight(currentPosition, out position);
+        }
+
+        public (int, int) GetBoundsOfWhitespace(TContext context)
+        {
+            string currentText = context.ConsoleEditorLine.Text;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return currentText.GetBoundsOfWhitespace(currentPosition);
+        }
+
+        public (int, int) GetBoundsOfWord(TContext context)
+        {
+            string currentText = context.ConsoleEditorLine.Text;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return currentText.GetBoundsOfWord(currentPosition);
+        }
+
+        public int GetStartOfWhitespace(TContext context)
+        {
+            string currentText = context.ConsoleEditorLine.Text;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return currentText.GetBoundsOfWhitespace(currentPosition).Item1;
+        }
+
         public int GetStartOfWord(TContext context)
         {
             string currentText = context.ConsoleEditorLine.Text;
             int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            int endPosition = currentText.IndexOf(ch => !ch.IsWhiteSpace(), currentPosition - 1, false);
-            int startPosition = currentText.IndexOf(ch => ch.IsWhiteSpace(), endPosition, false);
-            startPosition++;
-            return startPosition;
+            return currentText.GetBoundsOfWord(currentPosition).Item1;
+        }
+
+        private int GetEndOfWhitespace(TContext context)
+        {
+            string currentText = context.ConsoleEditorLine.Text;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return currentText.GetBoundsOfWhitespace(currentPosition).Item2;
         }
 
         private int GetEndOfWord(TContext context)
         {
             string currentText = context.ConsoleEditorLine.Text;
             int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            int startPosition = currentText.IndexOf(ch => !ch.IsWhiteSpace(), currentPosition, true);
-            int endPosition = currentText.IndexOf(ch => ch.IsWhiteSpace(), startPosition, true);
-            endPosition = endPosition == -1 ? currentText.Length : endPosition;
-            return endPosition;
+            return currentText.GetBoundsOfWord(currentPosition).Item2;
         }
 
         public string RemoveWordBeforeCursor(ConsoleKeyInfo keyInfo, TContext context)
         {
-            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
             int startPosition = GetStartOfWord(context);
-            string wordBeforeCursor = context.ConsoleEditorLine.Remove(startPosition, currentPosition - startPosition);
-            return wordBeforeCursor;
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            return context.ConsoleEditorLine.Remove(startPosition, currentPosition - startPosition);
         }
 
         public string RemoveTextBeforeCursor(ConsoleKeyInfo keyInfo, TContext context)
@@ -98,20 +140,24 @@ namespace CommandLineEditors.Editor
             return ConsoleKeyHandlerResult.Consumed;
         }
 
-        public string RemoveWordAfterCursor(TContext context)
-        {
-            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            int endPosition = GetEndOfWord(context);
-            string wordAfterCursor = context.ConsoleEditorLine.Remove(currentPosition, endPosition - currentPosition);
-            return wordAfterCursor;
-        }
-
         public string RemoveTextAfterCursor(TContext context)
         {
             int currentCursorPosition = context.ConsoleEditorLine.CurrentCursorPosition;
             int currentTextLength = context.ConsoleEditorLine.Length;
-            string removedText = context.ConsoleEditorLine.Remove(currentCursorPosition, currentTextLength - currentCursorPosition);
-            return removedText;
+            return context.ConsoleEditorLine.Remove(currentCursorPosition, currentTextLength - currentCursorPosition);
+        }
+
+        public string RemoveWordAfterCursor(TContext context)
+        {
+            int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
+            int endPosition = GetEndOfWord(context);
+            return context.ConsoleEditorLine.Remove(currentPosition, endPosition - currentPosition);
+        }
+
+        public string RemoveWhitespaceAroundCursor(TContext context)
+        {
+            (int startPosition, int endPosition) = GetBoundsOfWhitespace(context);
+            return context.ConsoleEditorLine.Remove(startPosition, endPosition - startPosition);
         }
 
         public ConsoleKeyHandlerResult CapitalizeCharacterUnderCursor(ConsoleKeyInfo keyInfo, TContext context)
