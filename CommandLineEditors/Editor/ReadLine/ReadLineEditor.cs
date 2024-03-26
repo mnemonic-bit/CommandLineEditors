@@ -121,7 +121,7 @@ namespace CommandLineEditors.Editor.ReadLine
             keyHandlerMap.AddKeyHandler(ConsoleKey.Home, _commonHandlers.MoveCursorToStartOfLine); // HOME
             keyHandlerMap.AddKeyHandler(ConsoleKey.End, _commonHandlers.MoveCursorToEndOfLine); // END
 
-            // Ctrl-key-combinations
+            // Ctrl-key bindings
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0001', ConsoleKey.A, false, false, true), ProcessCtrlA); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0002', ConsoleKey.B, false, false, true), ProcessCtrlB); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0004', ConsoleKey.D, false, false, true), ProcessCtrlD); // 
@@ -142,7 +142,7 @@ namespace CommandLineEditors.Editor.ReadLine
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0019', ConsoleKey.Y, false, false, true), PasteClipboard); // 
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u001d', ConsoleKey.Oem6, false, false, true), MoveForwardToSingleCharacterWord); // Ctrl-]
 
-            // Alt-key-combinations
+            // Alt-key bindings
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('b', ConsoleKey.B, false, true, false), _commonHandlers.MoveCursorLeftToStartOfWord); // Alt-b
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('c', ConsoleKey.C, false, true, false), _commonHandlers.CapitalizeCharacterUnderCursor); // Alt-c
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('d', ConsoleKey.D, false, true, false), RemoveWordAfterCursor); // Alt-d
@@ -157,7 +157,7 @@ namespace CommandLineEditors.Editor.ReadLine
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0000', ConsoleKey.Delete, false, true, false), RemoveWordBeforeCursor); // Alt-Delete
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0023', ConsoleKey.D3, true, true, false), CommentLineAndStartNewOne); // Alt-#
 
-            // Ctrl-Alt-key-combinations
+            // Ctrl-Alt-key bindings
             keyHandlerMap.AddKeyHandler(new ConsoleKeyInfo('\u0000', ConsoleKey.Oem6, false, true, true), MoveBackwardToSingleCharacterWord); // Ctrl-Alt-]
 
             return keyHandlerMap;
