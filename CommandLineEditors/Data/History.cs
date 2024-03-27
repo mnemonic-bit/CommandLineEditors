@@ -34,12 +34,45 @@ namespace CommandLineEditors.Data
         /// of the current history element to that last added
         /// element.
         /// </summary>
-        /// <param name="historyEntry"></param>
+        /// <param name="entry"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AppendEntry(TEntry historyEntry)
+        public void AppendEntry(TEntry entry)
         {
-            _history.Add(historyEntry);
+            _history.Add(entry);
             _positionInHistory = _history.Count - 1;
+        }
+
+        /// <summary>
+        /// Appends all entries given by the enumeration of enties.
+        /// </summary>
+        /// <param name="enteies"></param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AppendEntries(IEnumerable<TEntry> enteies)
+        {
+            foreach(var entry in enteies)
+            {
+                AppendEntry(entry);
+            }
+        }
+
+        /// <summary>
+        /// Clears the history by removing all its entries.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear()
+        {
+            _history.Clear();
+            _positionInHistory = INITIAL_HISTORY_POSITION;
+        }
+
+        /// <summary>
+        /// Gets an enumeration of all entries stored in this history instance.
+        /// </summary>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public IEnumerable<TEntry> GetEntries()
+        {
+            return _history;
         }
 
         /// <summary>
@@ -100,8 +133,10 @@ namespace CommandLineEditors.Data
         }
 
 
+        private const int INITIAL_HISTORY_POSITION = -1;
+
         private readonly List<TEntry> _history = new List<TEntry>();
-        private int _positionInHistory = -1;
+        private int _positionInHistory = INITIAL_HISTORY_POSITION;
 
 
     }

@@ -10,11 +10,11 @@ namespace CommandLineEditors.Editor.ReadLine
 
         public bool Aborted { get; set; }
 
-        public string Result => Hit;
+        public string? Result => Hit;
 
         public History<string> History { get; set; }
 
-        public string Hit { get; set; }
+        public string? Hit { get; set; }
 
     }
 }

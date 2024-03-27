@@ -12,7 +12,7 @@ namespace CommandLineEditors.Editor
     /// handler is invoked.
     /// </summary>
     /// <typeparam name="TContext"></typeparam>
-    internal sealed class LineEditor<TContext> : IConsoleEditor
+    internal sealed class LineEditor<TContext>// : IConsoleEditor
         where TContext : IEditorContext
     {
 
@@ -70,7 +70,7 @@ namespace CommandLineEditors.Editor
                 }
             }
 
-            if (result == ConsoleKeyHandlerResult.Finished)
+            if (result == ConsoleKeyHandlerResult.Finished && _context.Result != null)
             {
                 return _context.Result;
             }

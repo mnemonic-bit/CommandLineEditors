@@ -2,6 +2,7 @@
 using CommandLineEditors.Data;
 using CommandLineEditors.Extensions;
 using System;
+using System.Collections.Generic;
 
 namespace CommandLineEditors.Editor.ReadLine
 {
@@ -59,6 +60,11 @@ namespace CommandLineEditors.Editor.ReadLine
             _context.ConsoleEditorLine.Close();
         }
 
+        public IEnumerable<string> GetHistory()
+        {
+            return _history.GetEntries();
+        }
+
         public void RefreshDisplay()
         {
             _context.ConsoleEditorLine.RefreshDisplay();
@@ -68,6 +74,12 @@ namespace CommandLineEditors.Editor.ReadLine
         {
             InitContext(_context, "");
             return _lineEditor.ReadLine();
+        }
+
+        public void SetHistory(IEnumerable<string> history)
+        {
+            _history.Clear();
+            _history.AppendEntries(history);
         }
 
 

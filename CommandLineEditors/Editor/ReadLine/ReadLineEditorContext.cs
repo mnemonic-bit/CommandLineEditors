@@ -9,6 +9,8 @@ namespace CommandLineEditors.Editor.ReadLine
 
         public string Result => ConsoleEditorLine.Text;
 
+        public ReadLineEditorContext() { }
+
         /// <summary>
         /// Gets or sets the flag indicating whether the insert-mode
         /// is active. If false, the editor is in overwrite-mode.

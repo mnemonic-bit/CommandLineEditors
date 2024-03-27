@@ -3,7 +3,7 @@ using System;
 
 namespace CommandLineEditors.Editor.Vi
 {
-    internal sealed class ViLineCommandEditor : IConsoleEditor
+    internal sealed class ViLineCommandEditor// : IConsoleEditor
     {
 
         public ViLineCommandEditor(string prompt)

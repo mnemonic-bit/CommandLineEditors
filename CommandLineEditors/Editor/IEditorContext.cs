@@ -13,7 +13,7 @@ namespace CommandLineEditors.Editor
         /// <summary>
         /// Gets the result of reading input from the user.
         /// </summary>
-        string Result { get; }
+        string? Result { get; }
 
     }
 }

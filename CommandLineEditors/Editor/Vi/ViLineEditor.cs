@@ -1,5 +1,7 @@
 ﻿using CommandLineEditors.Console;
+using CommandLineEditors.Data;
 using System;
+using System.Collections.Generic;
 
 namespace CommandLineEditors.Editor.Vi
 {
@@ -59,10 +61,20 @@ namespace CommandLineEditors.Editor.Vi
             _lineEditor.Close();
         }
 
+        public IEnumerable<string> GetHistory()
+        {
+            throw new NotImplementedException();
+        }
+
         public string ReadLine()
         {
             InitContext(_context, "");
             return _lineEditor.ReadLine();
+        }
+
+        public void SetHistory(IEnumerable<string> history)
+        {
+            throw new NotImplementedException();
         }
 
 

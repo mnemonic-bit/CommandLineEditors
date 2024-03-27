@@ -4,7 +4,7 @@ using System;
 
 namespace CommandLineEditors.Editor.ReadLine
 {
-    internal sealed class ReverseSearchEditorLine : IConsoleEditor
+    internal sealed class ReverseSearchEditorLine// : IConsoleEditor
     {
 
         public ReverseSearchEditorLine(string prompt, History<string> history)

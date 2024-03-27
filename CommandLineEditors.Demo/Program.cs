@@ -1,5 +1,6 @@
 ﻿using CommandLineEditors.Editor.ReadLine;
-
+using System.Collections.Generic;
+using System.Linq;
 using SystemConsole = System.Console;
 
 namespace CommandLineEditors.Demo
@@ -17,6 +18,7 @@ namespace CommandLineEditors.Demo
 
             // the read line instance we will use
             ReadLineEditor readLineInterface = new ReadLineEditor("", "> ");
+            readLineInterface.SetHistory(new List<string>() { "first history entry", "second history entry", "third history entry" });
 
             string result = "-not-empty-to-start-with-";
             while (!string.IsNullOrEmpty(result))
