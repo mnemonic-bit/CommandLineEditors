@@ -54,6 +54,127 @@ namespace CommandLineEditors.Tests
             endPosition.Should().Be(9);
         }
 
+        [Fact]
+        public void GetBoundsOfWord_ShouldReturnBounds_WhenCursorIsPlacedAtTheEndOfWord_1()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 3;
+
+            // Act
+            (int startPosition, int endPosition) = text.GetBoundsOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(0);
+            endPosition.Should().Be(3);
+        }
+
+        [Fact]
+        public void GetBoundsOfWord_ShouldReturnBounds_WhenCursorIsPlacedAtTheEndOfWord_2()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 9;
+
+            // Act
+            (int startPosition, int endPosition) = text.GetBoundsOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(5);
+            endPosition.Should().Be(9);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedAtTheStartOfThePreviousWord_1()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 5;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(0);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedAtTheStartOfThePreviousWord_2()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 4;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(0);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedAtTheStartOfThePreviousWord_4()
+        {
+            // Arrange
+            string text = " 123  abcd";
+            int currentPosition = 6;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(1);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedAtTheEndOfTheText_1()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 9;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(5);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedAtTheEndOfTheText_2()
+        {
+            // Arrange
+            string text = "123  abcd ";
+            int currentPosition = 10;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(5);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedInsideOfThatWord_1()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 6;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(5);
+        }
+
+        [Fact]
+        public void GetNextStartOfWord_ShouldFindTheStartOfTheWord_WhenPositionedInsideOfThatWord_2()
+        {
+            // Arrange
+            string text = "123  abcd";
+            int currentPosition = 2;
+
+            int startPosition = text.GetNextStartOfWord(currentPosition);
+
+            // Assert
+            startPosition.Should().Be(0);
+        }
+
         [Theory]
         [InlineData(" abc ", 1)]
         [InlineData(" abc ", 2)]

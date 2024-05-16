@@ -14,8 +14,30 @@ namespace CommandLineEditors.Extensions
             return (startPosition, endPosition);
         }
 
+        /// <summary>
+        /// Returns the bounds of the word within the current position.
+        /// If the current position is at the end of the word, this still
+        /// will return the word to the left. No white-space is skipped,
+        /// and if the current position is in the middle of a larger patch
+        /// of white-space, a tuple with both values equal to the current
+        /// position will be returned.
+        /// </summary>
+        /// <param name="text">The text to search through.</param>
+        /// <param name="position">The current position from where to start looking for bounds of a word.</param>
+        /// <returns></returns>
         public static (int, int) GetBoundsOfWord(this string text, int position)
         {
+            // There is no word if the text length is zero.
+            if (text.Length == 0)
+            {
+                return (0, 0);
+            }
+
+            if (position == text.Length || text[position].IsWhiteSpace() && position - 1 >= 0)
+            {
+                position -= 1;
+            }
+
             if (text[position].IsWhiteSpace())
             {
                 return (position, position);
@@ -26,6 +48,26 @@ namespace CommandLineEditors.Extensions
             int endPosition = text.IndexOf(ch => ch.IsWhiteSpace(), position, true);
             endPosition = endPosition == -1 ? text.Length : endPosition;
             return (startPosition, endPosition);
+        }
+
+        /// <summary>
+        /// Searches for the start position of the 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public static int GetNextStartOfWord(this string text, int position)
+        {
+            if (text.Length > 0)
+            {
+                position -= 1;
+            }
+
+            int endPosition = text.IndexOf(ch => !ch.IsWhiteSpace(), position, false);
+            int startPosition = text.IndexOf(ch => ch.IsWhiteSpace(), endPosition, false);
+            startPosition = startPosition == -1 ? 0 : startPosition + 1;
+
+            return startPosition;
         }
 
         /// <summary>

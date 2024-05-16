@@ -200,12 +200,7 @@ namespace CommandLineEditors.Editor.ReadLine
         private ConsoleKeyHandlerResult ClearScreen(ConsoleKeyInfo keyInfo, ReadLineEditorContext context)
         {
             ConsoleLayer.Clear();
-            //TODO: bug in the refresh logic: the console screen is
-            // cleared by the previous command, but the coordinates
-            // of the current line will not change. This leads to
-            // positioning the currently edited text at the same screen
-            // coordinates as it was before clearing the screen.
-            context.ConsoleEditorLine.RefreshDisplay();
+            context.ConsoleEditorLine.SetPosition(0, 0);
             return ConsoleKeyHandlerResult.Consumed;
         }
 

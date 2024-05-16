@@ -154,6 +154,11 @@ namespace CommandLineEditors.Console
             _consoleEditorLine.CurrentCursorPosition = lineState.CursorPosition;
         }
 
+        public void SetPosition(int x, int y)
+        {
+            _consoleEditorLine.SetPosition(x, y);
+        }
+
 
         private readonly IConsoleEditorLine _consoleEditorLine;
         private readonly List<LineState> _lineStates = new List<LineState>();

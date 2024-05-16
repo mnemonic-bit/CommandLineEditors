@@ -63,21 +63,15 @@ namespace CommandLineEditors.Console
 
         public ConsoleEditorLine(string text, string prefix = "")
         {
-            _editorLineStartPositionX = SystemConsole.CursorLeft;
-            _editorLineStartPositionY = SystemConsole.CursorTop;
-
             _prefix = prefix;
-            ConsoleLayer.WriteStringAtPosition(_editorLineStartPositionX, _editorLineStartPositionY, prefix);
-
-            _editableAreaStartPositionX = SystemConsole.CursorLeft;
-            _editableAreaStartPositionY = SystemConsole.CursorTop;
-
             _positionInInputBuffer = 0;
 
             _operationMode = OperationMode.InsertMode;
-
             _inputBuffer = new StringBuilder(text);
+
             _previewString = "";
+
+            InitDisplay();
         }
 
         public void Close()
@@ -253,13 +247,28 @@ namespace CommandLineEditors.Console
             return removedText;
         }
 
+        /// <summary>
+        /// Sets the position of the editor line. This will move its complete
+        /// contents including its prompt to a new position on screen. The previous
+        /// text will not be removed or fixed. This method only prints out what
+        /// the current line looks like, but at a different position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public void SetPosition(int x, int y)
+        {
+            ConsoleLayer.SetCursorPosition(x, y);
+            InitDisplay();
+            RefreshDisplay();
+        }
 
-        private readonly int _editorLineStartPositionX;
-        private readonly int _editorLineStartPositionY;
+
+        private int _editorLineStartPositionX;
+        private int _editorLineStartPositionY;
         private readonly string _prefix;
 
-        private readonly int _editableAreaStartPositionX;
-        private readonly int _editableAreaStartPositionY;
+        private int _editableAreaStartPositionX;
+        private int _editableAreaStartPositionY;
 
         private int _positionInInputBuffer;
 
@@ -296,6 +305,17 @@ namespace CommandLineEditors.Console
                 posX %= SystemConsole.WindowWidth;
             }
             return (posX, posY);
+        }
+
+        public void InitDisplay()
+        {
+            _editorLineStartPositionX = SystemConsole.CursorLeft;
+            _editorLineStartPositionY = SystemConsole.CursorTop;
+
+            ConsoleLayer.WriteStringAtPosition(_editorLineStartPositionX, _editorLineStartPositionY, _prefix);
+
+            _editableAreaStartPositionX = SystemConsole.CursorLeft;
+            _editableAreaStartPositionY = SystemConsole.CursorTop;
         }
 
         private void SetText(string newInputContent)

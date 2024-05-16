@@ -21,5 +21,6 @@
         string Remove(int startPos, int count);
         char RemoveAfterCursor();
         char RemoveBeforeCursor();
+        void SetPosition(int x, int y);
     }
 }

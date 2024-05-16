@@ -103,7 +103,7 @@ namespace CommandLineEditors.Editor
         {
             string currentText = context.ConsoleEditorLine.Text;
             int currentPosition = context.ConsoleEditorLine.CurrentCursorPosition;
-            return currentText.GetBoundsOfWord(currentPosition).Item1;
+            return currentText.GetNextStartOfWord(currentPosition);
         }
 
         private int GetEndOfWhitespace(TContext context)
