@@ -73,7 +73,7 @@ namespace CommandLineEditors.Editor.ReadLine
         {
             historyEntry = default;
 
-            if (_positionInHistory != 0)
+            if (_editorHistory.Length > 0)
             {
                 _positionInHistory = _editorHistory.Length - 1;
                 historyEntry = CurrentEntry;
